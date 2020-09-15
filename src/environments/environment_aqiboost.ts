@@ -3,7 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiUrl: 'http://localhost:4000/aqiboost-back',
+  payment: {
+    stripe: {
+      publishableKey:
+        'pk_test_51HK23RBSZ5Z8mEDFtus2xBRRwuEQI8hC8A5YQD3y9aLFdzmNx1e8dwThxihFOcG1QBzD7zULz0mTm0cMfiGm86Kg00fQhnqoAg',
+      tarifMois: 5,
+      tarifAnnee: 50,
+    },
+  },
 };
 
 /*

@@ -1,0 +1,56 @@
+<form [formGroup]="FormListeBaseExercice">
+  <div class="btn-group mb-3" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-secondary" [routerLink]="['/fiche_exercice','']"
+      routerLinkActive="router-link-active">Ajouter une base exercice</button>
+  </div>
+  <div class="card mt-4" style="min-height: 50px;">
+    <div class="card-header">Liste des exercices</div>
+    <div>
+      <table class="table table-hover">
+        <thead>
+          <th style="width:30px">Numero</th>
+          <th style="text-align: left;">Titre</th>
+          <th style="text-align: left;">Descriptif</th>
+          <th style="width: 150px;"></th>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let BaseExercice of base_exercice">
+            <td>{{ BaseExercice.NumeroExercice }}</td>
+            <td style="text-align: left;">{{ BaseExercice.Titre }}</td>
+            <td style="text-align: left;">{{ BaseExercice.DescriptifExercice }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm mr-2" style="width: 50px;"
+                [routerLink]="['/fiche_exercice',BaseExercice.id]" routerLinkActive="router-link-active"><img
+                  src="../../assets/images/editer.png"></button>
+              <button class="btn btn-primary btn-sm" style="width: 50px;"
+                (click)="delete_base_exercice(BaseExercice.id)"><img src="../../assets/images/supprimer.png"></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>
+
+<!-- ----------------------------------YES/NO---------------------------- -->
+<ng-template #popup_yes_no let-modal>
+  <div class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="close(false)" data-dismiss="modal"
+            aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Yes or No?</h4>
+        </div>
+        <div class="modal-body">
+          <p>It's your call...</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" ng-click="close(false)" class="btn btn-default" data-dismiss="modal">No</button>
+          <button type="button" ng-click="close(true)" class="btn btn-primary" data-dismiss="modal">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

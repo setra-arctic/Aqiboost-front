@@ -1,0 +1,64 @@
+<form [formGroup]="FormListMatrice">
+  <div class="btn-group" role="group" aria-label="Basic example" style="margin-top:100x">
+    <button type="button" class="btn btn-secondary" [routerLink]="['/ajout_matrice', '']"
+      routerLinkActive="router-link-active">Ajouter une matrice</button>
+  </div>
+  <div class="list-matrice">
+    <ul class='list-group' *ngFor="let MatriceExercice of matrice_exercice">
+      <li class="list-group-item">
+        <div class="form-num-matrice">
+          <label>Numéro de la matrice</label>
+          <input type="number" class="form-control" id="title" value={{MatriceExercice.NumeroMatrice}} disabled
+            style="width:50px">
+        </div>
+        <div class="form-titre-matrice">
+          <label>Titre de la matrice</label>
+          <!-- <input type="text" class="form-control" id="title" formControlName="TitreMatrice" style="width : 800px"
+            value="Titre de la matrice"> -->
+          <input type="text" class="form-control" id="title" value={{MatriceExercice.Titre}} disabled>
+        </div>
+        <div class='button-class mt-4'>
+          <button type="button" class="btn btn-primary" style="width: 200px;"
+            [routerLink]="['/ajout_matrice', MatriceExercice.id]">Voir détails matrice</button>
+          <button type="button" class="btn btn-primary" style="width: 200px; margin-left: 5px;"
+            (click)="suppr_matrice(MatriceExercice.id)">Supprimer</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</form>
+
+<!-- ----------------------------------listExercice----------------------- -->
+
+<ng-template #popup_exercice let-modal>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <form [formGroup]="groupe_tag">
+
+          <div class="card">
+            <div class="card-header">Exercices associés à "{{nom_data}}"</div>
+            <table class="table table-hover">
+              <thead>
+                <th>Numero</th>
+                <th>Titre</th>
+                <th>Descriptif</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let Exercice of liste_exercice">
+                  <td>{{Exercice.NumeroExercice}}</td>
+                  <td>{{Exercice.Titre}}</td>
+                  <td>{{Exercice.DescriptifExercice}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fermer</button>
+  </div>
+</ng-template>

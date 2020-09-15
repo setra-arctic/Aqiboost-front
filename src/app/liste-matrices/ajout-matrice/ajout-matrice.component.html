@@ -1,0 +1,90 @@
+<form [formGroup]="FormAjoutMatrice">
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-secondary" [routerLink]="['/liste_matrices']"
+      routerLinkActive="router-link-active">Liste des matrices</button>
+  </div>
+  <div class="card text-center mt-4" style="min-height: 550px; width : 700px; margin: auto">
+    <div class="card-header">
+      <div>
+        <label style="margin-top: 10px;">[ {{titre_form_matrice}} ]</label>
+      </div>
+    </div>
+
+    <div class="form-titre-matrice" style="text-align: left; margin :auto">
+      <label style="margin-top: 5px; height: 15px">Numéro de la matrice</label>
+      <input type="number" class="form-control" id="title" formControlName="Numero_matrice"
+        style="width : 100px; margin-bottom: 10px">
+
+      <label style="height: 15px;">Titre de la matrice</label>
+      <input type="text" class="form-control" id="title" formControlName="Titre_matrice"
+        style="margin-bottom: 10px; width : 600px">
+
+      <label style="height: 15px">Descriptif de la matrice</label>
+      <textarea class="form-control" formControlName="Descriptif_matrice" style="margin-bottom: 10px"></textarea>
+
+      <label style="margin-top: 5px; height: 15px">Nom de la page</label>
+      <input type="text" class="form-control" id="title" formControlName="NomPage" style="margin-bottom: 10px">
+
+      <div class="card" style="width:auto">
+        <div class="card-header">Paramètres d'entrée</div>
+        <table class="table table-hover">
+          <thead>
+            <th>Nom</th>
+            <th>Valeur</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let PE of listeParamEntree">
+              <td>{{PE.nom}}</td>
+              <td>{{PE.valeur}}</td>
+              <td style="text-align: right;">
+                <button class="btn btn-primary btn-sm mr-2" style="width: 50px;"><img
+                    src="../../assets/images/editer.png" (click)="afficherPE(PE.nom, PE.valeur)"
+                    (click)="open(popup_paramEntree)"></button>
+                <button class="btn btn-primary btn-sm" style="width: 50px;" (click)="supprParam(PE.nom)"><img
+                    src="../../assets/images/supprimer.png"></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px; margin-top: 5px;"
+        (click)="open(popup_paramEntree)">Ajout de paramètres d'entrée</button>
+      <div>
+        <label style="margin-top: 5px; height: 15px">Structure des paramètres de sortie</label>
+      </div>
+      <input type="text" class="form-control" id="title" formControlName="ParamSortie" style="margin-bottom: 10px">
+
+      <img [src]="url" style="height:200px; width:200px; margin-top:10px;"> <br />
+      <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
+      <button type="button" (click)="supprImage()">Enlever image</button>
+
+      <div style="text-align: center; margin-top: 20px; margin-bottom: 10px;">
+        <button type="submit" class="btn btn-primary" style="width: 200px;"
+          (click)="ajout_matrice_exercice()">OK</button>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+<!-- ----------------------------------paramEntree----------------------- -->
+
+<ng-template #popup_paramEntree let-modal>
+  <div class="modal-body">
+    <form [formGroup]="popupPE">
+      <label>Nom</label>
+      <input type="text" class="form-control" style="margin-bottom: 10px" #nom formControlName="nomPE">
+
+      <label>Valeur</label>
+      <input type="text" class="form-control" style="margin-bottom: 10px" #valeur formControlName="valeurPE">
+
+      <div style="text-align: center; margin-top: 20px; margin-bottom: 10px;">
+        <button class="btn btn-primary" (click)="modal.close('ajoutPE')">{{ajoutModifParam}}</button>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">Fermer</button>
+  </div>
+</ng-template>

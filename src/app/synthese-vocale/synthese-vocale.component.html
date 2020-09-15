@@ -1,0 +1,64 @@
+<html>
+
+
+<form [formGroup]="textSynthForm">
+
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">{{lib_text_synth}}</label>
+
+    <textarea class="form-control" id="TextToSynth" formControlName="Text_synth" #Text></textarea>
+  </div>
+
+  <div class="btn">
+    <div>
+      <button type="submit" class="btn btn-primary btn-block" style="width: 250px;" (click)="speakNow(Text.value)">
+        <!-- <button type="submit" class="btn btn-primary btn-block" style="width: 250px;" (click)="speakNow_1()"> -->
+
+        <i *ngIf="isload" class="fa fa-spinner fa-pulse fa-2x fa-fw mr-4"></i>
+
+        Générer la synthèse vocale
+
+        <i *ngIf="audio" class="fa fa-volume-up ml-4" aria-hidden="true"></i>
+      </button>
+      <div style="margin-top: 5px;">
+        <audio id="audioPlayback" controls preload="auto" [src]="audioSrc">
+        </audio>
+      </div>
+    </div>
+    <div>
+      <label style="color: #31c231; margin-top: 15px;" *ngIf="indication_synth">Synthèse
+        vocale générée</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" (click)="Ajout_Modif()"
+      style="width: 250px; margin-top: 15px" [disabled]="!isValidForm()">{{lib_ajout_modif}}</button>
+    <button type="button" class="btn btn-secondary btn-block" style="width: 250px; margin-left: 260px; margin-top:-38px"
+      *ngIf="affich_btn_cancel" (click)="InitTextSynthese()">Annuler la
+      modif</button>
+  </div>
+
+  <div style="margin-top: 20px; border-width: 1mm;">
+    <ul class='list-group mt-4' *ngFor="let ExerciceData of exercice_data">
+      <li class="list-group-item" style="min-height:150px">
+        <div class="form-num-matrice" style="text-align: left;">
+          <label>{{ExerciceData.DataTexte}}</label>
+        </div>
+        <div class="form-titre-matrice" style="text-align: left; margin-top: 4px">
+          <audio id="audioPlayback" controls preload="auto" [src]="ExerciceData.DataMemo">
+          </audio>
+          <!-- <button type="button" class="btn btn-secondary" style="width: 200px;"
+            (click)="LireSon(ExerciceData.DescriptifData)">Lire le son</button> -->
+        </div>
+
+        <div class='button-class mt-4'>
+          <button type="button" class="btn btn-primary" style="width: 200px;"
+            (click)="AfficherPourModif(ExerciceData.DataTexte,ExerciceData.id)">MODIFIER</button>
+          <button type="button" class="btn btn-primary" style="width: 200px; margin-left: 5px;"
+            (click)="SupprimerDataExercice(ExerciceData.id)">SUPPRIMER</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</form>
+
+</html>

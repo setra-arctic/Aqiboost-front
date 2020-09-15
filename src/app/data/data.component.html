@@ -1,0 +1,200 @@
+<div class="modal-body">
+  <h4 class="modal-title" id="modal-basic-title">Gestion des data</h4>
+  <hr>
+  <form>
+    <div class="form-group">
+
+      <form [formGroup]="groupe_data" style="text-align: left;">
+        <label style="height: 15px; text-align: left;">Texte</label>
+        <input type="text" #Data class="form-control" style="margin-bottom: 10px; text-align: left"
+          formControlName="DataTexte" (keyup)=keyup_data($event.target.value) (input)=keyup_data(Data.value)>
+
+        <label style="height: 15px; text-align:left;">Commentaire</label>
+        <input type="text" class="form-control" style="margin-bottom: 10px; text-align: left"
+          formControlName="DescriptifData">
+
+        <div>
+          <div class="card" style="margin-bottom: 10px">
+            <div class="card-header">Liste des tags </div>
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let tag of list_tag">
+                  <td>{{tag.tag}}</td>
+                  <td style="text-align: right;">
+                    <button class="btn btn-primary btn-sm" (click)="enleverTag(tag.id)">Enlever
+                      le tag</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom : 10px;"
+            (click)="open(popup_tag)">Tag</button>
+        </div>
+
+        <div class='card' style="margin-bottom: 20px; width : 600px">
+          <div class="form-check">
+            <div style="text-align: left; margin-left : 20px">
+              <input class="form-check-input" type="radio" id="formCheck-1" (click)="selection_type(0)"
+                [checked]="type_image" />
+              <label class="form-check-label" for="formCheck-1" style="margin-top: 2px;">Image</label>
+            </div>
+            <div style="margin-top: -22px; text-align: center;">
+              <input class="form-check-input" type="radio" id="formCheck-2" (click)="selection_type(1)"
+                [checked]="type_audio" />
+              <label class="form-check-label" for="formCheck-1" style="margin-top: 2px;">Audio</label>
+            </div>
+            <div style="margin-top: -22px; text-align: right; margin-right : 20px">
+              <input class="form-check-input" type="radio" id="formCheck-3" (click)="selection_type(2)"
+                [checked]="type_video" />
+              <label class="form-check-label" for="formCheck-1" style="margin-top: 2px;">Video</label>
+            </div>
+          </div>
+        </div>
+
+        <div style="min-height: 50px; margin-bottom: 20px;" *ngIf="type_audio">
+          <audio id="audioPlayback" controls preload="auto" [src]="url_fichier">
+          </audio>
+          <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
+        </div>
+
+        <div style="min-height: 50px; margin-bottom: 20px;" *ngIf="type_image">
+          <img [src]="url_fichier" style="height:200px; width:200px; margin-top:10px;"> <br />
+          <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
+        </div>
+
+        <div style="min-height: 50px; margin-bottom: 20px;" *ngIf="type_video">
+          <video #videoPlayer [src]="fichier_video" controls>
+          </video>
+          <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
+        </div>
+
+        <hr style="margin-left : 0px; color:#0062cc">
+        <div style="text-align: center;">
+          <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px"
+            (click)="ajout_modif_data()">{{lib_btn_data}}</button>
+        </div>
+
+        <div class="input-group mb-3" style="text-align: right; width:400px; margin-top:10px">
+          <input type="text" class="form-control" placeholder="Chercher" aria-label="Recipient's username"
+            aria-describedby="button-addon2" #Texte (keydown)="keyDownFunction($event, Texte.value)">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+              (click)="searchData(Texte.value)">Chercher</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Liste des data</div>
+          <table class="table table-hover">
+            <thead>
+              <th style="width: 600px;">Texte data</th>
+              <th>Type data</th>
+              <th>Nom data</th>
+              <th style="width:200px"></th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ExerciceData of list_exercice_data"
+                (click)="click_tr(ExerciceData.id, ExerciceData.texte)"
+                [ngClass]="{'table-active': ExerciceData.id == data_selected}">
+                <td>{{ExerciceData.texte}}</td>
+                <td>{{ExerciceData.type}}</td>
+                <td>{{ExerciceData.nom_fichier}}</td>
+                <td style="text-align: right; width:200px">
+                  <button class="btn btn-primary btn-sm" style="margin-right: 10px;"
+                    (click)="open(popup_exercice)">Exercices</button>
+                  <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                    (click)="afficher_pour_modif_data(ExerciceData.id)"><img
+                      src="../../../../assets/images/editer.png"></button>
+                  <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                    (click)="supprData(ExerciceData.id)"><img src="../../../../assets/images/supprimer.png"></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+  </form>
+</div>
+
+<!-- --------------------------------popup tag-------------------------------- -->
+<ng-template #popup_tag let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Gestion des tags</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <form [formGroup]="groupe_tag">
+          <label style="height: 15px;">Tag</label>
+          <input type="text" #Tag class="form-control" style="margin-bottom: 10px;" formControlName="tag"
+            (keyup)=keyup_tag($event.target.value) (input)=keyup_tag(Tag.value)>
+
+          <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px"
+            (click)=ajout_modif_tag()>{{lib_btn_tag}}</button>
+
+          <div class="card">
+            <div class="card-header">Liste des tags</div>
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let Tag of enreg_tag">
+                  <td style="width:830px">{{Tag.tag}}</td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" (click)="ajoutTagData(Tag.id,Tag.tag)"
+                      [disabled]="verifyTagExist(Tag.id)">{{lib_btn_ajout_data}}</button>
+                  </td>
+                  <td style="text-align: right;">
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                      (click)="afficher_pour_modif_tag(Tag.id, Tag.tag)"><img
+                        src="../../../assets/images/editer.png"></button>
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;" (click)=supprTag(Tag.id)><img
+                        src="../../../assets/images/supprimer.png"></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fermer</button>
+  </div>
+</ng-template>
+
+<!-- ----------------------------------listExercice----------------------- -->
+
+<ng-template #popup_exercice let-modal>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <form [formGroup]="groupe_tag">
+
+          <div class="card">
+            <div class="card-header">Exercices associés à "{{nom_data}}"</div>
+            <table class="table table-hover">
+              <thead>
+                <th>Numero</th>
+                <th>Titre</th>
+                <th>Descriptif</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let Exercice of liste_exercice">
+                  <td>{{Exercice.NumeroExercice}}</td>
+                  <td>{{Exercice.Titre}}</td>
+                  <td>{{Exercice.DescriptifExercice}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fermer</button>
+  </div>
+</ng-template>

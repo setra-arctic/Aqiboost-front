@@ -16,5 +16,13 @@
     {
       "path": "./e2e/tsconfig.json"
     }
-]
+],
+"compilerOptions": {
+  "module": "esnext",
+  // ...
+},
+"angularCompilerOptions": {
+  "enableIvy": true,
+  "allowEmptyCodegenFiles": true
+}
 }

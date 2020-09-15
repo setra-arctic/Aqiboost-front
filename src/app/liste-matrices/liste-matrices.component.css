@@ -1,0 +1,18 @@
+ul {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.list-group-item {
+  width: 700px;
+  margin: auto;
+}
+
+.form-num-matrice {
+  text-align: left;
+}
+
+.form-titre-matrice {
+  margin-top: 10px;
+  text-align: left
+}

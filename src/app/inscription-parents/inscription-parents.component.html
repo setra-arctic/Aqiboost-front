@@ -1,0 +1,395 @@
+<!-- <app-root></app-root>
+<script src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+  const stripe = Stripe(
+    'pk_test_51HK23RBSZ5Z8mEDFtus2xBRRwuEQI8hC8A5YQD3y9aLFdzmNx1e8dwThxihFOcG1QBzD7zULz0mTm0cMfiGm86Kg00fQhnqoAg');
+  const elements = stripe.elements();
+
+</script> -->
+
+<div class="row justify-content-center">
+  <div class="card mt-4" style="min-height: 50px; width: 600px">
+    <div class="card-header">{{ lib_card_header }}</div>
+
+    <div class="row justify-content-center">
+      <div style="text-align: left">
+        <form [formGroup]="InscriptionParent">
+          <fieldset *ngIf="num_etape == 0">
+            <label style="height: 15px; margin-top: 10px">Nom</label>
+            <input type="text" class="form-control" formControlName="Nom" style="width: 400px; margin-bottom: 10px" #Nom
+              (keyup)="keyupNom(Nom.value)" />
+            <div style="font-size: smaller; margin-top: 10px" *ngIf="alert_nom">
+              <span class="text-danger"> Nom manquant </span>
+            </div>
+
+            <label style="height: 15px">Prénom</label>
+            <input type="text" class="form-control" formControlName="Prenom" style="width: 400px; margin-bottom: 10px"
+              #Prenom (keyup)="keyupPrenom(Prenom.value)" />
+            <div style="font-size: smaller; margin-top: 10px" *ngIf="alert_prenom">
+              <span class="text-danger"> Prénom manquant </span>
+            </div>
+
+            <label style="height: 15px">Email</label>
+            <input type="email" class="form-control" formControlName="email" style="width: 400px; margin-bottom: 10px"
+              [className]="
+                email.touched && email.invalid
+                  ? 'form-control is-invalid'
+                  : 'form-control'
+              " (input)="keyupEmail()" #Email (keyup)="keyupMail(Email.value)" />
+            <div style="font-size: smaller; margin-top: 10px" *ngIf="alert_email">
+              <span class="text-danger"> Email manquant </span>
+            </div>
+            <div class="invalid-feedback" *ngIf="email.touched && email.invalid">
+              <span *ngIf="email.errors?.pattern" class="text-danger">Email invalide</span>
+            </div>
+
+            <div *ngIf="email_existant" style="font-size: smaller">
+              <span class="text-danger">Email déjà existant</span>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 10px">
+              <button type="button" class="btn btn-primary mt-10" style="width: 250px; font-size: small"
+                (click)="ValiderEtape()" [disabled]="!isValidForm() || (email.touched && email.invalid)">
+                Envoyer un email d'inscription
+              </button>
+            </div>
+            <div *ngIf="sent_email" style="font-size: smaller; margin-top: 10px">
+              <span>{{ sent_mail_info }}</span>
+            </div>
+          </fieldset>
+
+          <fieldset *ngIf="num_etape == 1">
+            <label style="height: 15px; margin-top: 10px">Nom</label>
+            <div>
+              <input type="text" class="form-control" id="title" style="width: 400px" value="{{ nom_parent }}"
+                disabled />
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Prénom</label>
+            <div>
+              <input type="text" class="form-control" id="title" style="width: 400px" value="{{ prenom_parent }}"
+                disabled />
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Email</label>
+            <div>
+              <input type="text" class="form-control" id="title" style="width: 400px" value="{{ email_parent }}"
+                disabled />
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Adresse</label>
+            <input type="text" class="form-control" formControlName="Adresse"
+              style="width: 400px; margin-bottom: 10px" />
+
+            <label style="height: 15px; margin-top: 10px">Code postal</label>
+            <input type="text" class="form-control" formControlName="CodePostal"
+              style="width: 400px; margin-bottom: 10px" />
+
+            <label style="height: 15px; margin-top: 10px">Ville</label>
+            <input type="text" class="form-control" formControlName="Ville" style="width: 400px; margin-bottom: 10px" />
+
+            <label style="height: 15px; margin-top: 10px">Téléphone</label>
+            <input type="text" class="form-control" formControlName="TelephoneMobile"
+              style="width: 400px; margin-bottom: 10px" />
+
+            <label style="height: 15px; margin-top: 10px">Mot de passe</label>
+            <input type="password" class="form-control" formControlName="MotDePasse"
+              style="width: 400px; margin-bottom: 10px" #mdp (keyup)="keyupMdp(mdp.value)" />
+            <div *ngIf="mdp_invalid" style="font-size: smaller; margin-top: 10px">
+              <span class="text-danger">
+                {{ mdp_text_error }}
+              </span>
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Confirmation du mot de passe</label>
+            <input type="password" class="form-control" style="width: 400px; margin-bottom: 10px" #mdpConfirm
+              (keyup)="keyupMdpConfirm(mdpConfirm.value)" />
+            <div *ngIf="mdpConfirm_invalid" style="font-size: smaller; margin-top: 10px">
+              <span class="text-danger">
+                {{ mdpConfirm_text_error }}
+              </span>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 10px">
+              <button type="button" class="btn btn-primary mt-10" style="width: 250px; font-size: small"
+                (click)="ValiderEtape()">
+                {{ lib_suivant }}
+              </button>
+            </div>
+          </fieldset>
+        </form>
+
+        <form [formGroup]="InscriptionEnfant">
+          <fieldset *ngIf="num_etape == 2">
+            <label style="height: 15px; margin-top: 10px">Nom</label>
+            <input type="text" class="form-control" style="width: 410px; margin-bottom: 10px" #Nom
+              (keyup)="keyupNomEnfant(Nom.value)" formControlName="Nom" />
+            <div style="font-size: smaller; margin-top: 10px" *ngIf="alert_nom_enfant">
+              <span class="text-danger"> Nom manquant </span>
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Prénom</label>
+            <input type="text" class="form-control" style="width: 410px; margin-bottom: 10px" #Prenom
+              (keyup)="keyupPrenomEnfant(Prenom.value)" formControlName="Prenom" />
+            <div style="font-size: smaller; margin-top: 10px" *ngIf="alert_prenom_enfant">
+              <span class="text-danger"> Prénom manquant </span>
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Date de naissance</label>
+            <input type="text" class="form-control" formControlName="Date_Naissance" [className]="
+              Date_Naissance.touched && Date_Naissance.invalid
+                  ? 'form-control is-invalid'
+                  : 'form-control'
+              " style="width: 410px; margin-bottom: 10px" bsDatepicker [bsConfig]="{
+                dateInputFormat: 'DD/MM/YYYY',
+                containerClass: 'theme-dark-blue',
+                adaptivePosition: true,
+                returnFocusToInput: true
+              }" #Date (keyup)="keyupDate(Date.value)" (bsValueChange)="keyupDate(Date.value)" />
+            <div style="font-size: smaller; margin-top: 10px" *ngIf="alert_date">
+              <span class="text-danger"> Date manquante </span>
+            </div>
+            <div class="invalid-feedback" *ngIf="Date_Naissance.touched && Date_Naissance.invalid">
+              <span *ngIf="Date_Naissance.errors?.pattern" class="text-danger">Date invalide</span>
+            </div>
+
+            <label>Niveau</label>
+            <select class="form-control" required style="width: 410px; margin-bottom: 10px"
+              (change)="niveauSelected($event.target.value)">
+              <option [selected]="!niveau_selected">---</option>
+              <option *ngFor="let NiveauEnfant of liste_niveau" value="{{ NiveauEnfant.num }}"
+                [selected]="NiveauEnfant.num == niveau_selected">
+                {{ NiveauEnfant.niveau }}
+              </option>
+            </select>
+
+            <label style="height: 15px; margin-top: 10px">Identifiant</label>
+            <input type="text" class="form-control" style="width: 410px; margin-bottom: 10px" #id
+              (keyup)="keyupIdentifiant(id.value)" formControlName="Identifiant" />
+            <div style="font-size: smaller; margin-top: 10px" *ngIf="alert_identifiant">
+              <span class="text-danger"> Identifiant manquant </span>
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Mot de passe</label>
+            <input type="password" class="form-control" formControlName="MotDePasse"
+              style="width: 410px; margin-bottom: 10px" #mdp (keyup)="keyupMdp(mdp.value)" />
+            <div *ngIf="mdp_invalid" style="font-size: smaller; margin-top: 10px">
+              <span class="text-danger">
+                {{ mdp_text_error }}
+              </span>
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Confirmation du mot de passe</label>
+            <input type="password" class="form-control" formControlName="MDPConfirm"
+              style="width: 410px; margin-bottom: 10px" #mdpConfirm (keyup)="keyupMdpConfirm(mdpConfirm.value)" />
+            <div *ngIf="mdpConfirm_invalid" style="font-size: smaller; margin-top: 10px">
+              <span class="text-danger">
+                {{ mdpConfirm_text_error }}
+              </span>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 10px">
+              <button type="button" class="btn btn-primary mt-10" style="width: 200px; font-size: small"
+                (click)="ValiderEtape()" [disabled]="Date_Naissance.touched && Date_Naissance.invalid">
+                {{ lib_ajout_modif_enfant }}
+              </button>
+            </div>
+
+            <div *ngIf="id_enfant" style="text-align: center; margin-bottom: 10px">
+              <button type="button" class="btn btn-secondary" style="width: 200px; font-size: small"
+                (click)="deleteEnfant()">
+                Supprimer
+              </button>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 30px">
+              <button type="button" class="btn btn-primary mt-10"
+                style="width: 200px; font-size: small; margin-right: 10px" (click)="etapePrecedente()">
+                {{ lib_precedent }}
+              </button>
+              <button type="button" class="btn btn-primary mt-10" style="width: 200px; font-size: small"
+                (click)="etapeSuivante()">
+                {{ lib_suivant }}
+              </button>
+            </div>
+          </fieldset>
+
+          <fieldset *ngIf="num_etape == 3">
+            <div class="card-header" style="margin-top: 10px; width: auto">
+              Liste des enfants
+            </div>
+            <table class="table table-hover border" style="width: 500px; border-color: grey">
+              <thead>
+                <th>Nom enfant</th>
+                <th>Niveau</th>
+                <th>Abonnement</th>
+                <th></th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let Enfant of liste_enfant">
+                  <td>{{ Enfant.Prenom }} {{ Enfant.Nom }}</td>
+                  <td>{{ Enfant.Niveau }}</td>
+                  <td style="text-align: center">
+                    <input type="checkbox" [disabled]="disabled" [checked]="abonnementEnfant(Enfant.id)" />
+                  </td>
+                  <td style="width: 100px">
+                    <button class="btn btn-primary btn-sm mr-2" style="width: 50px">
+                      <img src="../../assets/images/editer.png" placement="right" ngbTooltip="Modifier ou supprimer"
+                        (click)="afficherEnfant(Enfant.id)" />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="text-align: center">
+              <button type="button" class="btn btn-primary mt-10" style="width: 190px; font-size: small"
+                (click)="ajouterEnfant()">
+                Ajouter Enfant
+              </button>
+            </div>
+            <div style="text-align: center">
+              <button type="button" class="btn btn-primary mt-10"
+                style="width: 190px; font-size: small; margin-top: 10px" (click)="abonnement(popup_abonnement)">
+                Suivi des abonnements
+              </button>
+            </div>
+
+            <label style="height: 15px; margin-top: 20px">Paiement</label>
+            <div class="card" style="margin-bottom: 10px">
+              <div class="form-check" [disabled]="paiementChecked">
+                <div style="margin-left: 5px">
+                  <input class="form-check-input" type="radio" id="formCheck-1" (click)="selection_type(0)"
+                    [checked]="paiement_mois_checked" />
+                  <label class="form-check-label" for="formCheck-1" style="margin-top: 2px">Au mois</label>
+                  <div>
+                    <label class="form-check-label" for="formCheck-1" style="margin-top: 2px">5 euros par mois >>> Coût
+                      : 5 x 12 = 60 € pour 12
+                      mois</label>
+                  </div>
+                </div>
+
+                <div style="margin-left: 5px; margin-top: 10px">
+                  <input class="form-check-input" type="radio" id="formCheck-2" (click)="selection_type(1)"
+                    [checked]="paiement_annee_checked" />
+                  <label class="form-check-label" for="formCheck-1" style="margin-top: 2px">À l'année</label>
+                  <div>
+                    <label class="form-check-label" for="formCheck-1" style="margin-top: 2px">50 euros payé de suite
+                      pour 12 mois (10 euros de
+                      réduction)</label>
+                  </div>
+                </div>
+              </div>
+              <div style="
+                  margin-top: 10px;
+                  text-align: center;
+                  background: #5469d4;
+                  color: white;
+                ">
+                Total : {{ montantAPayer }} €
+              </div>
+            </div>
+
+            <div *ngIf="paiement" style="margin-top: 5px">
+              <form (ngSubmit)="createStripeToken()" class="checkout">
+                <label for="card-info">Card Info</label>
+                <div id="form-field">
+                  <div class="form-row">
+                    <div #cardInfo></div>
+                    <p>{{ result | json }}</p>
+                  </div>
+                  <div>
+                    <mat-error id="card-errors" role="alert" *ngIf="cardError">
+                      <mat-icon style="color: #f44336"></mat-icon>
+                      &nbsp;{{ cardError }}
+                    </mat-error>
+                  </div>
+                  <button id="submit-button" type="submit" style="background: #5469d4; width: 120px"
+                    [disabled]="cardError || montantAPayer == 0">
+                    Pay {{ montantAPayer }} €
+                    <div class="spinner-border" role="status" *ngIf="paiementEnCours">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="form-group form-check" style="margin-top: 30px">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+              <label class="form-check-label" for="exampleCheck1">J'accepte les
+                <a [routerLink]="" (click)="open(popup_cgu)" class="text-decoration-none">Conditions générales
+                  d'utilisation</a></label>
+            </div>
+
+            <div class="form-group form-check" style="margin-top: 10px">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+              <label class="form-check-label" for="exampleCheck1">J'accepte les conditions générales de vente</label>
+            </div>
+
+            <div style="text-align: center">
+              <button type="button" class="btn btn-primary mt-10"
+                style="width: 200px; font-size: small; margin-bottom: 10px" (click)="etapePrecedente()">
+                {{ lib_precedent }}
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    <div class="card-footer text-muted">
+      {{ texte_etape }}
+    </div>
+  </div>
+</div>
+
+<!-- --------------------------------popup CGU----------------------------- -->
+<ng-template #popup_cgu let-modal>
+  <div class="modal-body">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Aqiboost</h1>
+        </div>
+        <div class="modal-body">
+          <h2>Conditions générales d'utilisation</h2>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modal.close('Save click')">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- ------------------------------------abonnement-------------------------- -->
+<ng-template #popup_abonnement let-modal>
+  <div class="modal-body">
+    <div lass="modal-header">
+      <h1 class="modal-title">Abonnement</h1>
+    </div>
+    <table class="table table-hover border" style="border-color: grey">
+      <thead>
+        <th>Date</th>
+        <th>Enfant</th>
+        <th>Montant</th>
+        <th>Fréquence paiement</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let Abonnement of listeAbonnement">
+          <td>{{ Abonnement.date | date: "dd-MM-yyyy hh:mm:ss" }}</td>
+          <td>{{ Abonnement.nom_enfant }}</td>
+          <td>{{ Abonnement.montant }} €</td>
+          <td>{{ Abonnement.type_paiement }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close('Save click')">
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>

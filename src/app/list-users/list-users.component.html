@@ -1,0 +1,30 @@
+<form [formGroup]="form_users">
+  <div class="card">
+    <div class="card-header">List des utilisateurs</div>
+    <div style="height: 489px;">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>Login</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let users of list_users">
+              <td>{{users.id}}</td>
+              <td>{{users.login}}</td>
+              <td>
+                <button class="btn btn-primary btn-sm mr-2" style="width: 150px;"
+                  [routerLink]="['/fiche_user', users.id]" routerLinkActive="router-link-active">Modifier</button>
+                <button class="btn btn-primary btn-sm" style="width: 150px;"
+                  (click)="delete(users.id)">Supprimer</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>

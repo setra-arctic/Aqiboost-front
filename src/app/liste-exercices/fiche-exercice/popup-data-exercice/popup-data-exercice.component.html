@@ -1,0 +1,95 @@
+<!-- <div class="modal-dialog">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Gestion des data</h4>
+  </div>
+  
+</div> -->
+
+<div class="modal-body">
+  <h4 class="modal-title" id="modal-basic-title">Gestion des data</h4>
+  <hr>
+  <form>
+    <div class="form-group">
+
+      <form [formGroup]="groupe_data">
+        <label style="height: 15px;">Texte</label>
+        <input type="text" #Data class="form-control" style="margin-bottom: 10px;" formControlName="DataTexte"
+          (keyup)=keyup_data($event.target.value) (input)=keyup_data(Data.value)>
+
+        <label style="height: 15px;">Descriptif</label>
+        <input type="text" class="form-control" style="margin-bottom: 10px;" formControlName="DescriptifData">
+
+        <div class='card' style="margin-bottom: 20px;">
+          <div class="form-check">
+            <div style="margin-left: 5px;">
+              <input class="form-check-input" type="radio" id="formCheck-1" (click)="selection_type(0)"
+                [checked]="type_image" />
+              <label class="form-check-label" for="formCheck-1" style="margin-top: 2px;">Image</label>
+            </div>
+            <div style="margin-left: 200px; margin-top: -22px;">
+              <input class="form-check-input" type="radio" id="formCheck-2" (click)="selection_type(1)"
+                [checked]="type_audio" />
+              <label class="form-check-label" for="formCheck-1" style="margin-top: 2px;">Audio</label>
+            </div>
+            <div style="margin-left: 400px; margin-top: -22px;">
+              <input class="form-check-input" type="radio" id="formCheck-3" (click)="selection_type(2)"
+                [checked]="type_video" />
+              <label class="form-check-label" for="formCheck-1" style="margin-top: 2px;">Video</label>
+            </div>
+          </div>
+        </div>
+
+        <div style="min-height: 50px; margin-bottom: 20px;" *ngIf="type_audio">
+          <audio id="audioPlayback" controls preload="auto" [src]="url_fichier">
+          </audio>
+          <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
+        </div>
+
+        <div style="min-height: 50px; margin-bottom: 20px;" *ngIf="type_image">
+          <img [src]="url_fichier" style="height:200px; width:200px; margin-top:10px;"> <br />
+          <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
+        </div>
+
+        <div style="min-height: 50px; margin-bottom: 20px;" *ngIf="type_video">
+          <video #videoPlayer [src]="fichier_video" controls>
+          </video>
+          <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
+        </div>
+
+        <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px"
+          (click)="ajout_modif_data()">{{lib_btn_data}}</button>
+
+        <div class="card">
+          <div class="card-header">Liste des data</div>
+          <table class="table table-hover">
+            <thead>
+              <th style="width: 600px;">Texte data</th>
+              <th>Type data</th>
+              <th>Nom data</th>
+              <th style="width:175px"></th>
+              <th style="width:115px"></th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ExerciceData of list_exercice_data">
+                <td>{{ExerciceData.texte}}</td>
+                <td>{{ExerciceData.type}}</td>
+                <td>{{ExerciceData.nom_fichier}}</td>
+                <td>
+                  <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                    (click)="ajoutBaseExerciceData(ExerciceData.id, ExerciceData.texte)">Ajouter à l'exercice</button>
+                </td>
+                <td style="text-align: right;">
+                  <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                    (click)="afficher_pour_modif_data(ExerciceData.id)"><img
+                      src="../../../../assets/images/editer.png"></button>
+                  <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                    (click)="supprData(ExerciceData.id)"><img src="../../../../assets/images/supprimer.png"></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+  </form>
+</div>

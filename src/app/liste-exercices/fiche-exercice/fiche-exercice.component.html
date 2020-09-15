@@ -1,0 +1,349 @@
+<form [formGroup]="fiche_exercice">
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-secondary" [routerLink]="['/liste_base_exercices']"
+      routerLinkActive="router-link-active">Liste des exercices</button>
+  </div>
+  <div class="card mt-4" style="min-height: 550px;">
+
+    <div class="card-header" style="margin-bottom: 10px">
+      <div>
+        <label style="margin-top: 10px;">[ {{titre_fiche_exercice}} ]</label>
+      </div>
+    </div>
+
+    <div style="text-align: left; margin-left: 150px;">
+
+      <label style="height: 15px; margin-left: 0px;">Numero exercice</label>
+      <input type="number" class="form-control" id="title" formControlName="Numero_exercice"
+        style="width : 800px; margin-bottom: 10px;">
+
+      <label style="height: 15px;">Titre exercice</label>
+      <input type="text" class="form-control" formControlName="Titre_exercice"
+        style="width : 800px; margin-bottom: 10px;" required (keyup)="keyup_exercice($event.target.value)">
+
+      <label style="height: 15px">Descriptif</label>
+      <textarea class="form-control" formControlName="Descriptif_exercice"
+        style="width : 800px; margin-bottom: 10px"></textarea>
+
+      <label>Famille</label>
+      <select class="form-control" required style="width : 800px; margin-bottom: 10px"
+        (change)="famille_selected($event.target.value)">
+        <option value="" class="form-control" [selected]="!id_famille_selected">
+          ---
+        </option>
+        <option *ngFor="let Famille of enreg_famille" [selected]="Famille.id == id_famille_selected"
+          value={{Famille.id}}>
+          {{Famille.famille}}</option>
+      </select>
+      <button class="btn btn-primary btn-sm" (click)="open(popup_famille)" style="width: 200px">Famille</button>
+
+      <hr style="width : 800px; margin-left : 0px">
+
+      <div style="margin-top: 10px;">
+        <label>Sous-famille</label>
+        <select class="form-control" required style="width : 800px; margin-bottom: 10px"
+          (change)="sousFamille_selected($event.target.value)">
+          <option [selected]="!id_sf_selected">---</option>
+          <option *ngFor="let SousFamille of enreg_sous_famille" [selected]="SousFamille.id == id_sf_selected"
+            value={{SousFamille.id}}>
+            {{SousFamille.sous_famille}}</option>
+        </select>
+        <button class="btn btn-primary btn-sm" (click)="open(popup_sous_famille)"
+          style="width: 200px; margin-bottom : 10px;">Sous-famille</button>
+      </div>
+
+      <hr style="width : 800px; margin-left : 0px">
+
+      <div class="card" style="width : 800px; margin-bottom: 10px;">
+        <div class="card-header">Niveau</div>
+        <table class="table table-hover" style="width : 800px">
+          <tbody>
+            <tr *ngFor="let NiveauExercice of enreg_niveau">
+              <td>{{NiveauExercice.niveau}}</td>
+              <td #Niveau><input type="checkbox" (change)="niveauSelected(NiveauExercice.id)"
+                  [checked]="is(NiveauExercice.id)" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary btn-sm" (click)="open(popup_niveau)"
+        style="width: 200px; margin-bottom : 10px;">Niveau</button>
+
+      <hr style="width : 800px; margin-left : 0px">
+
+      <div>
+        <div class="card" style="margin-bottom: 10px; width : 800px">
+          <div class="card-header">Liste des tags de l'exercice</div>
+          <table class="table table-hover">
+            <tbody>
+              <tr *ngFor="let tag of list_tag">
+                <td>{{tag.nom}}</td>
+                <td style="text-align: right;">
+                  <button class="btn btn-primary btn-sm" (click)="enleverTag(tag.id)">Enlever
+                    le tag</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom : 10px;"
+          (click)="open(popup_tag)">Tag</button>
+      </div>
+
+      <hr style="width : 800px; margin-left : 0px">
+
+      <div style="margin-top: 10px;">
+        <label>Matrice</label>
+        <select class="form-control" required style="width : 800px; margin-bottom: 10px"
+          (change)="MatriceExerciceSelected($event.target.value)">
+          <option [selected]="!id_matrice_selected">---</option>
+          <option *ngFor="let MatriceExercice of enreg_matrice_exercice"
+            [selected]="MatriceExercice.id == id_matrice_selected" value={{MatriceExercice.id}}>
+            {{MatriceExercice.Titre}}</option>
+        </select>
+      </div>
+
+      <hr style="width : 800px; margin-left : 0px">
+
+      <label style="height: 15px;">Paramètres d'entrée</label>
+      <input type="text" class="form-control" formControlName="param_entree"
+        style="width : 800px; margin-bottom: 10px;">
+
+      <div class="card" style="width : 800px; margin-bottom: 10px;">
+        <div class="card-header">Liste des data</div>
+        <table class="table table-hover" style="width : 800px">
+          <thead>
+            <th>N° Ordre</th>
+            <th>Texte data</th>
+            <th>ID Data</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ExerciceData of list_data" (click)="click_tr(ExerciceData.idExerciceData)"
+              [ngClass]="{'table-active': ExerciceData.idExerciceData == data_selected}">
+              <td>{{ExerciceData.num_ordre}}</td>
+              <td>{{ExerciceData.texte}}</td>
+              <td>{{ExerciceData.idExerciceData}}</td>
+              <td>
+                <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                  (click)="enleverExerciceData(ExerciceData.idExerciceData)">Enlever</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom : 10px;"
+        (click)="open_popup_data()">Détails des data</button>
+      <button class="btn btn-primary btn-sm" style="width: 150px; margin-left: 300px;"
+        (click)="moveDataExercice('up')">Monter</button>
+      <button class="btn btn-primary btn-sm" style="width: 150px; margin-top : -63px; margin-left: 660px;"
+        (click)="moveDataExercice('down')">Descendre</button>
+
+    </div>
+    <div style="text-align: center;">
+      <a class="btn btn-light action-button" role="button" style="width: 200px"
+        (click)="enregExerciceData()">Enregistrer</a>
+    </div>
+  </div>
+
+</form>
+
+<!-- -------------------------------popup_famille---------------------------- -->
+<ng-template #popup_famille let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Gestion Famille</h4>
+    <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <form [formGroup]="groupe_famille">
+          <label style="height: 15px;">Nom Famille</label>
+          <input type="text" #NomFamille class="form-control" style="margin-bottom: 10px;" formControlName="famille"
+            (keyup)=keyup($event.target.value) (input)=keyup(NomFamille.value)>
+
+          <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px"
+            (click)=ajout_modif_famille()>{{lib_btn_valider_famille}}</button>
+
+          <div class="card" style="margin-bottom: 10px;">
+            <div class="card-header">Liste des familles</div>
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let Famille of enreg_famille">
+                  <td>{{ Famille.famille }}</td>
+                  <td style="text-align: right;">
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                      (click)="afficher_pour_modif(Famille.famille, Famille.id)"><img
+                        src="../../../assets/images/editer.png"></button>
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                      (click)="supprimer_famille(Famille.id)"><img src="../../../assets/images/supprimer.png"></button>
+                  </td>
+                </tr>
+                <tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fermer</button>
+  </div>
+</ng-template>
+
+
+<!-- ------------------------------popup_sous_famille---------------------- -->
+<ng-template #popup_sous_famille let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Gestion Sous-famille</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <form [formGroup]="groupe_sous_famille">
+          <label style="height: 15px;">Famille</label>
+          <select class="form-control" required style="margin-bottom: 10px"
+            (change)=famille_sf_selected($event.target.value)>
+            <option [selected]="!id_famille_selected">---</option>
+            <option *ngFor="let Famille of enreg_famille" [selected]="Famille.id == id_famille_selected"
+              value={{Famille.id}}>
+              {{Famille.famille}}</option>
+          </select>
+
+          <label style="height: 15px;">Nom Sous-famille</label>
+          <input type="text" #myText class="form-control" style="margin-bottom: 10px;" formControlName="sous_famille"
+            (keyup)=keyup_sf($event.target.value) (input)=keyup_sf(myText.value)>
+
+          <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px"
+            (click)=ajout_modif_sf()>{{lib_btn_valider_sf}}</button>
+
+          <div class="card">
+            <div class="card-header">Liste des sous-familles</div>
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let SousFamille of enreg_sous_famille">
+                  <td>{{ SousFamille.sous_famille }}</td>
+                  <td style="text-align: right;">
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                      (click)="afficher_pour_modif_sf(SousFamille.sous_famille, SousFamille.id)"><img
+                        src="../../../assets/images/editer.png"></button>
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                      (click)="suppr_sous_famille(SousFamille.id, SousFamille.id_famille)"><img
+                        src="../../../assets/images/supprimer.png"></button>
+                  </td>
+                </tr>
+                <tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fermer</button>
+  </div>
+</ng-template>
+
+<!-- ----------------------------------popup NiveauExercice--------------------------- -->
+<ng-template #popup_niveau let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Gestion des niveaux</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <form [formGroup]="groupe_niveau">
+          <label style="height: 15px;">Niveau</label>
+          <input type="text" #Niveau class="form-control" style="margin-bottom: 10px;" formControlName="niveau"
+            (keyup)=keyup_niveau($event.target.value) (input)=keyup_niveau(Niveau.value)>
+
+          <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px"
+            (click)=ajout_modif_niveau()>{{lib_btn_niveau}}</button>
+
+          <div class="card">
+            <div class="card-header">Liste des niveaux</div>
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let NiveauExercice of enreg_niveau">
+                  <td>{{ NiveauExercice.niveau }}</td>
+                  <td style="text-align: right;">
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                      (click)="afficher_pour_modif_niveau(NiveauExercice.niveau, NiveauExercice.id)"><img
+                        src="../../../assets/images/editer.png"></button>
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                      (click)="supprimerNiveau(NiveauExercice.id)"><img
+                        src="../../../assets/images/supprimer.png"></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fermer</button>
+  </div>
+</ng-template>
+
+<!-- --------------------------------popup tag-------------------------------- -->
+<ng-template #popup_tag let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Gestion des tags</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <form [formGroup]="groupe_tag">
+          <label style="height: 15px;">Tag</label>
+          <input type="text" #Tag class="form-control" style="margin-bottom: 10px;" formControlName="tag"
+            (keyup)=keyup_tag($event.target.value) (input)=keyup_tag(Tag.value)>
+
+          <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px"
+            (click)=ajout_modif_tag()>{{lib_btn_tag}}</button>
+
+          <div class="card">
+            <div class="card-header">Liste des tags</div>
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let Tag of enreg_tag">
+                  <td style="width:830px">{{Tag.tag}}</td>
+                  <td>
+                    <button class="btn btn-primary btn-sm"
+                      (click)="ajoutTagExercice(Tag.id,Tag.tag)">{{lib_btn_ajout_data}}</button>
+                  </td>
+                  <td style="text-align: right;">
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;"
+                      (click)="afficher_pour_modif_tag(Tag.id, Tag.tag)"><img
+                        src="../../../assets/images/editer.png"></button>
+                    <button class="btn btn-primary btn-sm" style="margin-left: 10px;" (click)=supprTag(Tag.id)><img
+                        src="../../../assets/images/supprimer.png"></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fermer</button>
+  </div>
+</ng-template>
+
+
+<!-- <hr>
+
+<pre>{{ closeResult }}</pre> -->

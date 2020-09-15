@@ -1,0 +1,10 @@
+<div class="row justify-content-center">
+  <div class="card justify-content-center" style="width:450px">
+    <p style="text-align: center;">{{data.texte}}</p>
+  </div>
+  <div mat-dialog-actions class="row justify-content-center" style="width:450px; margin-top:10px">
+    <button class="btn btn-info" mat-button cdkFocusInitial [mat-dialog-close]="1" (click)="onYesClick"
+      style="width:150px; margin-right: 10px;">Oui</button>
+    <button class="btn btn-info" mat-button (click)="onNoClick()" style="width:150px">Non</button>
+  </div>
+</div>

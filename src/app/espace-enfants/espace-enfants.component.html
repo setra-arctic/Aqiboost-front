@@ -1,0 +1,37 @@
+<div class="row justify-content-center">
+  <div class="card mt-4" style="min-height: 50px; width: 600px">
+    <div class="card-header">Espace Enfant
+    </div>
+
+    <div class="row justify-content-center">
+      <div style="text-align: left">
+        <form [formGroup]="formEnfant">
+          <fieldset *ngIf="num_etape == 0">
+            <label style="height: 15px; margin-top: 10px">Identifiant</label>
+            <input type="text" class="form-control" formControlName="Identifiant"
+              style="width: 400px; margin-bottom: 10px" #idEnfant (keyup)="keyupIdentifiant(idEnfant.value)" />
+            <div style="font-size: smaller; margin-top: 10px" *ngIf="idInvalide">
+              <span class="text-danger">{{ errorIdentifiant }}</span>
+            </div>
+
+            <label style="height: 15px; margin-top: 10px">Mot de passe</label>
+            <input type="password" class="form-control" formControlName="MotDePasse"
+              style="width: 400px; margin-bottom: 10px" #mdp (keyup)="keyupPWD(mdp.value)" />
+            <div *ngIf="mdp_invalid" style="font-size: smaller; margin-top: 10px">
+              <span class="text-danger">
+                {{ mdp_text_error }}
+              </span>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 10px">
+              <button type="button" class="btn btn-primary mt-10" style="width: 250px; font-size: small"
+                (click)="validerLogin(idEnfant.value)">
+                Entrer
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
