@@ -27,7 +27,9 @@ export class AjoutMatriceComponent implements OnInit {
   image_url: '';
   closeResult = '';
   listeParamEntree: any = [];
+  listeParamSortie: any = [];
   ajoutModifParam = 'Ajouter';
+  typeParam = 'Entree';
 
   constructor(
     private matrice_service: AjoutMatriceService,
@@ -46,7 +48,6 @@ export class AjoutMatriceComponent implements OnInit {
       Descriptif_matrice: [],
       Numero_matrice: [],
       NomPage: [],
-      ParamSortie: [],
       PhotoMatrice: [],
     });
 
@@ -67,9 +68,9 @@ export class AjoutMatriceComponent implements OnInit {
             Descriptif_matrice: this.enreg.DescriptifMatrice,
             Numero_matrice: this.enreg.NumeroMatrice,
             NomPage: this.enreg.NomPage,
-            ParamSortie: this.enreg.ParametresSortie,
           });
           this.listeParamEntree = this.enreg.ParametresEntree;
+          this.listeParamSortie = this.enreg.ParametresSortie;
           if (this.enreg.Image_ != '') {
             this.url = this.enreg.Image_;
           }
@@ -92,6 +93,8 @@ export class AjoutMatriceComponent implements OnInit {
             const enreg = this.FormAjoutMatrice.value;
             enreg.url_image = this.image_url;
             enreg.ParamEntree = this.listeParamEntree;
+            enreg.ParamSortie = this.listeParamSortie;
+            console.log(this.listeParamSortie);
             this.matrice_service.Ajout_matrice(enreg).subscribe(
               (response) => {
                 this.router.navigate(['/liste_matrices']);
@@ -112,6 +115,8 @@ export class AjoutMatriceComponent implements OnInit {
           if (response == '') {
             const enreg = this.FormAjoutMatrice.value;
             enreg.url_image = this.image_url;
+            enreg.ParamEntree = this.listeParamEntree;
+            enreg.ParamSortie = this.listeParamSortie;
             this.matrice_service.Modif_matrice(this.id, enreg).subscribe(
               (response) => {
                 this.router.navigate(['/liste_matrices']);
@@ -186,7 +191,6 @@ export class AjoutMatriceComponent implements OnInit {
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
       return 'by clicking on a backdrop';
     } else {
-      console.log(1, reason);
       return `with: ${reason}`;
     }
   }
@@ -195,36 +199,74 @@ export class AjoutMatriceComponent implements OnInit {
     let paramExistant = false;
     let i = -1;
     let j = i;
-    if (!nom) {
-    } else {
-      this.listeParamEntree.forEach((element) => {
-        i++;
-        if (element.nom == nom) {
-          paramExistant = true;
-          j = i;
-        }
-      });
-      if (!paramExistant) {
-        if (
-          this.listeParamEntree.push({
-            nom: nom,
-            valeur: valeur,
-          }) > 0
-        ) {
-          this.popupPE.reset();
-        }
+
+    if (this.typeParam == 'Entree') {
+      if (!nom) {
       } else {
-        if (this.ajoutModifParam == 'Ajouter') {
-          this.Toast.error('Paramètre déjà existant', '', {
-            timeOut: 2000,
-            positionClass: 'toast-top-center',
-          });
-        } else {
-          if (j >= 0) {
-            this.listeParamEntree[j].nom = nom;
-            this.listeParamEntree[j].valeur = valeur;
-            this.ajoutModifParam = 'Ajouter';
+        this.listeParamEntree.forEach((element) => {
+          i++;
+          if (element.nom == nom) {
+            paramExistant = true;
+            j = i;
+          }
+        });
+        if (!paramExistant) {
+          if (
+            this.listeParamEntree.push({
+              nom: nom,
+              valeur: valeur,
+            }) > 0
+          ) {
             this.popupPE.reset();
+          }
+        } else {
+          if (this.ajoutModifParam == 'Ajouter') {
+            this.Toast.error('Paramètre déjà existant', '', {
+              timeOut: 2000,
+              positionClass: 'toast-top-center',
+            });
+          } else {
+            if (j >= 0) {
+              this.listeParamEntree[j].nom = nom;
+              this.listeParamEntree[j].valeur = valeur;
+              this.ajoutModifParam = 'Ajouter';
+              this.popupPE.reset();
+            }
+          }
+        }
+      }
+    } else if (this.typeParam == 'Sortie') {
+      if (!nom) {
+      } else {
+        this.listeParamSortie.forEach((element) => {
+          i++;
+          if (element.nom == nom) {
+            paramExistant = true;
+            j = i;
+          }
+        });
+        if (!paramExistant) {
+          if (
+            this.listeParamSortie.push({
+              nom: nom,
+              valeur: valeur,
+            }) > 0
+          ) {
+            this.popupPE.reset();
+          }
+        } else {
+          if (this.ajoutModifParam == 'Ajouter') {
+            this.Toast.error('Paramètre déjà existant', '', {
+              timeOut: 2000,
+              positionClass: 'toast-top-center',
+            });
+          } else {
+            if (j >= 0) {
+              this.listeParamSortie[j].nom = nom;
+              this.listeParamSortie[j].valeur = valeur;
+              this.ajoutModifParam = 'Ajouter';
+              this.popupPE.reset();
+            }
           }
         }
       }
@@ -242,14 +284,36 @@ export class AjoutMatriceComponent implements OnInit {
   supprParam(nom) {
     let i = -1;
     let j = i;
-    this.listeParamEntree.forEach((element) => {
-      i++;
-      if (element.nom == nom) {
-        j = i;
-      }
-    });
-    if (j >= 0) {
-      this.listeParamEntree.splice(j, 1);
+
+    switch (this.typeParam) {
+      case 'Entree':
+        this.listeParamEntree.forEach((element) => {
+          i++;
+          if (element.nom == nom) {
+            j = i;
+          }
+        });
+        if (j >= 0) {
+          this.listeParamEntree.splice(j, 1);
+        }
+        break;
+      case 'Sortie':
+        this.listeParamSortie.forEach((element) => {
+          i++;
+          if (element.nom == nom) {
+            j = i;
+          }
+        });
+        if (j >= 0) {
+          this.listeParamSortie.splice(j, 1);
+        }
+        break;
     }
+  }
+
+  changeTypeParam(typeParam) {
+    this.typeParam = typeParam;
+    this.ajoutModifParam = 'Ajouter';
+    this.popupPE.reset();
   }
 }

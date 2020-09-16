@@ -25,7 +25,7 @@
       <label style="margin-top: 5px; height: 15px">Nom de la page</label>
       <input type="text" class="form-control" id="title" formControlName="NomPage" style="margin-bottom: 10px">
 
-      <div class="card" style="width:auto">
+      <div class="card" style="width:auto; margin-top: 5px;">
         <div class="card-header">Paramètres d'entrée</div>
         <table class="table table-hover">
           <thead>
@@ -39,25 +39,49 @@
               <td>{{PE.valeur}}</td>
               <td style="text-align: right;">
                 <button class="btn btn-primary btn-sm mr-2" style="width: 50px;"><img
-                    src="../../assets/images/editer.png" (click)="afficherPE(PE.nom, PE.valeur)"
-                    (click)="open(popup_paramEntree)"></button>
-                <button class="btn btn-primary btn-sm" style="width: 50px;" (click)="supprParam(PE.nom)"><img
-                    src="../../assets/images/supprimer.png"></button>
+                    src="../../assets/images/editer.png" (click)="changeTypeParam('Entree')"
+                    (click)="afficherPE(PE.nom, PE.valeur)" (click)="open(popup_paramEntree)"></button>
+                <button class="btn btn-primary btn-sm" style="width: 50px;" (click)="changeTypeParam('Entree')"
+                  (click)="supprParam(PE.nom)"><img src="../../assets/images/supprimer.png"></button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px; margin-top: 5px;"
-        (click)="open(popup_paramEntree)">Ajout de paramètres d'entrée</button>
-      <div>
-        <label style="margin-top: 5px; height: 15px">Structure des paramètres de sortie</label>
-      </div>
-      <input type="text" class="form-control" id="title" formControlName="ParamSortie" style="margin-bottom: 10px">
+        (click)="changeTypeParam('Entree')" (click)="open(popup_paramEntree)">Ajouter paramètres d'entrée</button>
 
-      <img [src]="url" style="height:200px; width:200px; margin-top:10px;"> <br />
-      <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
-      <button type="button" (click)="supprImage()">Enlever image</button>
+      <div class="card" style="width:auto; margin-top: 5px">
+        <div class="card-header">Paramètres de sortie</div>
+        <table class="table table-hover">
+          <thead>
+            <th>Nom</th>
+            <th>Valeur</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let PE of listeParamSortie">
+              <td>{{PE.nom}}</td>
+              <td>{{PE.valeur}}</td>
+              <td style="text-align: right;">
+                <button class="btn btn-primary btn-sm mr-2" style="width: 50px;"><img
+                    src="../../assets/images/editer.png" (click)="changeTypeParam('Sortie')"
+                    (click)="afficherPE(PE.nom, PE.valeur)" (click)="open(popup_paramEntree)"></button>
+                <button class="btn btn-primary btn-sm" style="width: 50px;" (click)="changeTypeParam('Sortie')"
+                  (click)="supprParam(PE.nom)"><img src="../../assets/images/supprimer.png"></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px; margin-top: 5px;"
+        (click)="changeTypeParam('Sortie')" (click)="open(popup_paramEntree)">Ajouter paramètres de sortie</button>
+
+      <div style="margin-top: 10px;">
+        <img [src]="url" style="height:200px; width:200px; margin-top:10px;"> <br />
+        <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
+        <button type="button" (click)="supprImage()">Enlever image</button>
+      </div>
 
       <div style="text-align: center; margin-top: 20px; margin-bottom: 10px;">
         <button type="submit" class="btn btn-primary" style="width: 200px;"

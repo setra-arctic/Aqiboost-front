@@ -105,9 +105,23 @@
 
       <hr style="width : 800px; margin-left : 0px">
 
-      <label style="height: 15px;">Paramètres d'entrée</label>
-      <input type="text" class="form-control" formControlName="param_entree"
-        style="width : 800px; margin-bottom: 10px;">
+      <div class="card" style="width:800px; margin-top: 10px;">
+        <div class="card-header">Paramètres d'entrée</div>
+        <table class="table table-hover">
+          <thead>
+            <th>Nom</th>
+            <th>Valeur</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let PE of listeParamEntree">
+              <td>{{PE.nom}}</td>
+              <td>{{PE.valeur}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr style="width : 800px; margin-left : 0px">
 
       <div class="card" style="width : 800px; margin-bottom: 10px;">
         <div class="card-header">Liste des data</div>

@@ -107,6 +107,7 @@ export class DataComponent implements OnInit {
     this.base_exercice.getAllTags().subscribe((response) => {
       this.enreg_tag = response;
     });
+    this.lib_btn_tag = 'Ajouter';
   }
 
   afficherType(id_exercice_data) {
@@ -252,7 +253,7 @@ export class DataComponent implements OnInit {
         this.exercice_data
           .searchExerciceDataId(this.id_data, this.lib_data)
           .subscribe((response) => {
-            if (response > 0) {
+            if (response.length > 0) {
               alert('Data texte déja existant');
             } else {
               const enreg = this.groupe_data.value;

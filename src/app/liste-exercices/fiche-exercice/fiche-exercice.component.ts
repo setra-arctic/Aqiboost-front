@@ -1,3 +1,4 @@
+import { AjoutMatriceService } from './../../liste-matrices/ajout-matrice/ajout-matrice.service';
 import { AqiboostDialogComponent } from './../../aqiboost-dialog/aqiboost-dialog.component';
 import { PopupDataExerciceComponent } from './popup-data-exercice/popup-data-exercice.component';
 import { element } from 'protractor';
@@ -71,6 +72,7 @@ export class FicheExerciceComponent implements OnInit {
   NiveauChecked: any[] = [];
   modalRef: any;
   data_selected: any;
+  listeParamEntree: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -79,7 +81,8 @@ export class FicheExerciceComponent implements OnInit {
     private base_exercice: FicheExerciceService,
     private modalService: NgbModal,
     public dialog: MatDialog,
-    private Toast: ToastrService
+    private Toast: ToastrService,
+    private matriceExercice: AjoutMatriceService
   ) {
     this.id = this.route.snapshot.params.id;
   }
@@ -704,7 +707,13 @@ export class FicheExerciceComponent implements OnInit {
 
   // -------------------------------------MatriceExercice-----------------------
   MatriceExerciceSelected(id_matrice_exercice) {
+    this.listeParamEntree.splice(0, this.listeParamEntree.length);
     this.id_matrice_selected = id_matrice_exercice;
+    this.matriceExercice
+      .Get_matrice(this.id_matrice_selected)
+      .subscribe((res) => {
+        this.listeParamEntree = res.ParametresEntree;
+      });
   }
 
   // -------------------------------BASE EXERCICE------------------------------
