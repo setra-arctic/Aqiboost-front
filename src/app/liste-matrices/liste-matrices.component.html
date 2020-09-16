@@ -18,8 +18,11 @@
           <input type="text" class="form-control" id="title" value={{MatriceExercice.Titre}} disabled>
         </div>
         <div class='button-class mt-4'>
-          <button type="button" class="btn btn-primary" style="width: 200px;"
+          <button type="button" class="btn btn-primary" style="width: 200px;margin-right: 5px;"
             [routerLink]="['/ajout_matrice', MatriceExercice.id]">Voir détails matrice</button>
+          <button type="button" class="btn btn-primary" style="width: 200px;" ngbTooltip="Voir les exercices associés"
+            placement="bottom" (click)="getExercices(MatriceExercice.id,MatriceExercice.Titre)"
+            (click)=open(popup_exercice)>Exercices</button>
           <button type="button" class="btn btn-primary" style="width: 200px; margin-left: 5px;"
             (click)="suppr_matrice(MatriceExercice.id)">Supprimer</button>
         </div>
@@ -35,10 +38,10 @@
     <form>
       <div class="form-group">
 
-        <form [formGroup]="groupe_tag">
+        <form>
 
           <div class="card">
-            <div class="card-header">Exercices associés à "{{nom_data}}"</div>
+            <div class="card-header">Exercices associés à "{{nom_matrice}}"</div>
             <table class="table table-hover">
               <thead>
                 <th>Numero</th>

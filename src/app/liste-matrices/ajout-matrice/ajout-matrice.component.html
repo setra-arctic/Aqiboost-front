@@ -77,6 +77,25 @@
       <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px; margin-top: 5px;"
         (click)="changeTypeParam('Sortie')" (click)="open(popup_paramEntree)">Ajouter paramètres de sortie</button>
 
+      <div>
+        <div class="card" style="margin-bottom: 10px; margin-top: 10px;">
+          <div class="card-header">Liste des tags </div>
+          <table class="table table-hover">
+            <tbody>
+              <tr *ngFor="let tag of list_tag">
+                <td>{{tag.tag}}</td>
+                <td style="text-align: right;">
+                  <button class="btn btn-primary btn-sm" (click)="enleverTag(tag.id)">Enlever
+                    le tag</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom : 10px;"
+          (click)="open(popup_tag)">Tag</button>
+      </div>
+
       <div style="margin-top: 10px;">
         <img [src]="url" style="height:200px; width:200px; margin-top:10px;"> <br />
         <input type='file' (change)="onSelectFile($event)" style="margin-top: 10px;">
@@ -110,5 +129,51 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="modal.close()">Fermer</button>
+  </div>
+</ng-template>
+
+<!-- --------------------------------popup tag-------------------------------- -->
+<ng-template #popup_tag let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Gestion des tags</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <form [formGroup]="groupe_tag">
+          <label style="height: 15px;">Tag</label>
+          <input type="text" #Tag class="form-control" style="margin-bottom: 10px;" formControlName="tag"
+            (keyup)=keyup_tag($event.target.value) (input)=keyup_tag(Tag.value)>
+
+          <button class="btn btn-primary btn-sm" style="width: 200px; margin-bottom: 10px"
+            (click)=ajout_modif_tag()>{{lib_btn_tag}}</button>
+
+          <div class="card">
+            <div class="card-header">Liste des tags</div>
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let Tag of enreg_tag">
+                  <td style="width:830px">{{Tag.tag}}</td>
+                  <td style="text-align: right;">
+                    <button class="btn btn-primary btn-sm" (click)="ajoutTagData(Tag.id,Tag.tag)"
+                      [disabled]="verifyTagExist(Tag.id)">Ajouter</button>
+                  </td>
+                  <td style="width:250px; text-align: right;">
+                    <button class="btn btn-primary btn-sm" (click)="afficher_pour_modif_tag(Tag.id, Tag.tag)"
+                      style="margin-right:5px"><img src="../../../assets/images/editer.png"></button>
+                    <button class="btn btn-primary btn-sm" (click)=supprTag(Tag.id)><img
+                        src="../../../assets/images/supprimer.png"></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fermer</button>
   </div>
 </ng-template>

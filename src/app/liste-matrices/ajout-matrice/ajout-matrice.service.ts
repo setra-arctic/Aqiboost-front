@@ -77,4 +77,34 @@ export class AjoutMatriceService {
       observe: 'events',
     });
   }
+
+  getTagMatriceExercice(id: Uuid) {
+    return this.http
+      .get(`${environment.apiUrl}/get_tag_matrice_exercice/` + id)
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
+
+  deleteTagMatriceExercice(id: Uuid) {
+    return this.http
+      .delete(`${environment.apiUrl}/delete_tag_matrice_exercice/` + id)
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
+
+  createTagMatriceExercice(enreg) {
+    return this.http
+      .post(`${environment.apiUrl}/create_tag_matrice_exercice`, enreg)
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
 }

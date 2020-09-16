@@ -1,3 +1,5 @@
+import { DataService } from './../../data/data.service';
+import { FicheExerciceService } from './../../liste-exercices/fiche-exercice/fiche-exercice.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Component, OnInit, ɵConsole } from '@angular/core';
@@ -17,6 +19,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class AjoutMatriceComponent implements OnInit {
   FormAjoutMatrice: FormGroup;
+  groupe_tag: FormGroup;
   popupPE: FormGroup;
   ModeOverture: string;
   id: '';
@@ -28,8 +31,14 @@ export class AjoutMatriceComponent implements OnInit {
   closeResult = '';
   listeParamEntree: any = [];
   listeParamSortie: any = [];
+  list_tag: any = [];
+  enreg_tag: any = [];
   ajoutModifParam = 'Ajouter';
   typeParam = 'Entree';
+  lib_btn_tag = 'Ajouter';
+  id_tag: '';
+  lib_tag = '';
+  index_tag = 0;
 
   constructor(
     private matrice_service: AjoutMatriceService,
@@ -37,7 +46,9 @@ export class AjoutMatriceComponent implements OnInit {
     private form_builder: FormBuilder,
     private modalService: NgbModal,
     private Toast: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private tag: FicheExerciceService,
+    private tagService: DataService
   ) {
     this.id = this.route.snapshot.params.id;
   }
@@ -49,6 +60,10 @@ export class AjoutMatriceComponent implements OnInit {
       Numero_matrice: [],
       NomPage: [],
       PhotoMatrice: [],
+    });
+
+    this.groupe_tag = this.form_builder.group({
+      tag: [],
     });
 
     this.popupPE = this.form_builder.group({
@@ -74,12 +89,30 @@ export class AjoutMatriceComponent implements OnInit {
           if (this.enreg.Image_ != '') {
             this.url = this.enreg.Image_;
           }
+
+          // Afficher les tags associés
+          this.matrice_service
+            .getTagMatriceExercice(this.id)
+            .subscribe((res) => {
+              res.forEach((element) => {
+                this.tagService.getATag(element.idTag).subscribe((resTag) => {
+                  this.list_tag.push({
+                    id: resTag.id,
+                    tag: resTag.tag,
+                  });
+                });
+              });
+            });
         },
         (err) => {
           alert('Error');
         }
       );
     }
+
+    this.tag.getAllTags().subscribe((res) => {
+      this.enreg_tag = res;
+    });
   }
 
   ajout_matrice_exercice() {
@@ -97,6 +130,16 @@ export class AjoutMatriceComponent implements OnInit {
             console.log(this.listeParamSortie);
             this.matrice_service.Ajout_matrice(enreg).subscribe(
               (response) => {
+                // ADD TagMatriceExercice
+                this.list_tag.forEach((element) => {
+                  let enreg: any = {};
+                  enreg.idTag = element.id;
+                  enreg.idMatriceExercice = this.id;
+                  this.matrice_service
+                    .createTagMatriceExercice(enreg)
+                    .subscribe();
+                });
+
                 this.router.navigate(['/liste_matrices']);
               },
               (error) => {
@@ -119,6 +162,20 @@ export class AjoutMatriceComponent implements OnInit {
             enreg.ParamSortie = this.listeParamSortie;
             this.matrice_service.Modif_matrice(this.id, enreg).subscribe(
               (response) => {
+                // MAJ TagMatriceExercice
+                this.matrice_service
+                  .deleteTagMatriceExercice(this.id)
+                  .subscribe(() => {
+                    this.list_tag.forEach((element) => {
+                      let enreg: any = {};
+                      enreg.idTag = element.id;
+                      enreg.idMatriceExercice = this.id;
+                      this.matrice_service
+                        .createTagMatriceExercice(enreg)
+                        .subscribe();
+                    });
+                  });
+
                 this.router.navigate(['/liste_matrices']);
               },
               (error) => {
@@ -315,5 +372,155 @@ export class AjoutMatriceComponent implements OnInit {
     this.typeParam = typeParam;
     this.ajoutModifParam = 'Ajouter';
     this.popupPE.reset();
+  }
+
+  // -------------------------------------TAG--------------------------------
+  keyup_tag(event) {
+    if (this.lib_btn_tag == 'Valider modification' && event == '') {
+      this.lib_btn_tag = 'Ajouter';
+      this.id_tag = '';
+    } else if (event != '') {
+      this.lib_tag = event;
+    }
+  }
+
+  ajout_modif_tag() {
+    if (!this.lib_tag) {
+      alert('Tag ne doit pas être vide');
+    } else {
+      if (this.lib_btn_tag == 'Ajouter') {
+        // Ajout tag
+        this.tag.findTagName(this.lib_tag).subscribe((response) => {
+          const enreg = response;
+          if (enreg.length > 0) {
+            alert('Tag déjà existant');
+          } else {
+            this.tag.newTag(this.groupe_tag.value).subscribe(() => {
+              this.tag.getAllTags().subscribe((response) => {
+                this.enreg_tag = response;
+              });
+              this.id_tag = '';
+              this.groupe_tag.patchValue({ tag: '' });
+              this.lib_tag = '';
+            });
+          }
+        });
+      } else {
+        // Modif tag
+        // Chercher les doublons
+        this.tag.findTagNameId(this.id_tag, this.lib_tag).subscribe((res) => {
+          if (res.length == 0) {
+            let idTag = this.id_tag;
+            let libTag = this.lib_tag;
+            this.tag
+              .updateTag(this.id_tag, this.groupe_tag.value)
+              .subscribe(() => {
+                this.tag.getAllTags().subscribe((response) => {
+                  this.enreg_tag = response;
+                  // Maj TagBaseExercice
+                  this.list_tag.forEach((element) => {
+                    if (element.id == idTag) {
+                      element.nom = libTag;
+                    }
+                  });
+                });
+                this.id_tag = '';
+                this.groupe_tag.patchValue({ tag: '' });
+                this.lib_tag = '';
+                this.lib_btn_tag = 'Ajouter';
+              });
+          } else {
+            alert('Tag déja existant');
+          }
+        });
+      }
+    }
+  }
+
+  afficher_pour_modif_tag(id_tag, nom_tag: '') {
+    this.groupe_tag.patchValue({ tag: nom_tag });
+    this.lib_tag = nom_tag;
+    this.id_tag = id_tag;
+    this.lib_btn_tag = 'Valider modification';
+    // Trouver l'index de l'élément à modifier
+    let i = -1;
+    this.list_tag.forEach((element) => {
+      i++;
+      if (element.nom == nom_tag) {
+        this.index_tag = i;
+      }
+    });
+  }
+
+  supprTag(id_tag) {
+    this.tag.deleteTag(id_tag).subscribe(() => {
+      this.tag.getAllTags().subscribe((response) => {
+        this.enreg_tag = response;
+        let index = -1;
+        let indexElement = -1;
+        this.list_tag.forEach((element) => {
+          index++;
+          if (element.id == id_tag) {
+            indexElement = index;
+          }
+        });
+        if (indexElement > -1) {
+          this.list_tag.splice(indexElement, 1);
+        }
+      });
+    });
+  }
+
+  getAllTags() {
+    this.tag.getAllTags().subscribe((response) => {
+      this.enreg_tag = response;
+    });
+  }
+
+  ajoutTagExercice(id_tag, nom_tag) {
+    let tag_exist = false;
+    this.list_tag.forEach((element) => {
+      if (element.id == id_tag) {
+        tag_exist = true;
+      }
+    });
+    if (tag_exist == false) {
+      this.list_tag.push({
+        nom: nom_tag,
+        id: id_tag,
+      });
+    }
+  }
+
+  enleverTag(id_tag) {
+    let index = -1;
+    let index_tag = -1;
+    this.list_tag.forEach((element) => {
+      index++;
+      if (element.id == id_tag) {
+        index_tag = index;
+      }
+    });
+    if (index_tag > -1) {
+      this.list_tag.splice(index_tag, 1);
+    }
+  }
+
+  ajoutTagData(idTag, NomTag) {
+    this.list_tag.push({
+      id: idTag,
+      tag: NomTag,
+    });
+    this.verifyTagExist(idTag);
+  }
+
+  verifyTagExist(idTag) {
+    let indexTag = false;
+    this.list_tag.forEach((element) => {
+      if (element.id == idTag) {
+        indexTag = true;
+      }
+    });
+    return indexTag;
   }
 }

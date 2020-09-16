@@ -171,7 +171,6 @@ export class FicheExerciceComponent implements OnInit {
             Numero_exercice: this.enreg_base_exercice.NumeroExercice,
             Titre_exercice: this.enreg_base_exercice.Titre,
             Descriptif_exercice: this.enreg_base_exercice.DescriptifExercice,
-            param_entree: this.enreg_base_exercice.ParametresEntree,
           });
           this.lib_exercice = this.enreg_base_exercice.Titre;
           // Famille
@@ -218,6 +217,14 @@ export class FicheExerciceComponent implements OnInit {
 
           // Matrice exercice
           this.id_matrice_selected = this.enreg_base_exercice.IDMatriceExercice;
+          if (!this.id_matrice_selected) {
+          } else {
+            this.matriceExercice
+              .Get_matrice(this.id_matrice_selected)
+              .subscribe((res) => {
+                this.listeParamEntree = res.ParametresEntree;
+              });
+          }
 
           // BaseExerciceData
           this.base_exercice

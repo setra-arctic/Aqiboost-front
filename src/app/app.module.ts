@@ -25,6 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
 import { DataComponent } from './data/data.component';
 import { EspaceEnfantsComponent } from './espace-enfants/espace-enfants.component';
+import { SequenceComponent } from './sequence/sequence.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { EspaceEnfantsComponent } from './espace-enfants/espace-enfants.componen
     AqiboostDialogComponent,
     DataComponent,
     EspaceEnfantsComponent,
+    SequenceComponent,
   ],
   imports: [
     BrowserModule,

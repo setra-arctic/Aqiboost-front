@@ -1,9 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ListeMatricesService } from './liste-matrices.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Console } from 'console';
-import { debugOutputAstAsTypeScript } from '@angular/compiler';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-liste-matrices',
@@ -13,10 +11,14 @@ import { debugOutputAstAsTypeScript } from '@angular/compiler';
 export class ListeMatricesComponent implements OnInit {
   FormListMatrice: FormGroup;
   matrice_exercice: any = [];
+  liste_exercice: any = [];
+  closeResult = '';
   @Input() Titre_matrice: string;
+  nom_matrice = '';
 
   constructor(
     private matrice_service: ListeMatricesService,
+    private modalService: NgbModal,
     private form_builder: FormBuilder
   ) {}
 
@@ -28,7 +30,6 @@ export class ListeMatricesComponent implements OnInit {
 
     this.matrice_service.getAll().subscribe(
       (response) => {
-        // console.log(response)
         this.matrice_exercice = response;
       },
       (error) => {
@@ -46,5 +47,35 @@ export class ListeMatricesComponent implements OnInit {
         alert('An error occured during deleting data.');
       }
     );
+  }
+
+  getExercices(idMatriceExercice, nomMatrice) {
+    this.matrice_service.getExercices(idMatriceExercice).subscribe((res) => {
+      this.liste_exercice = res;
+    });
+    this.nom_matrice = nomMatrice;
+  }
+
+  open(popup) {
+    this.modalService
+      .open(popup, { ariaLabelledBy: 'modal-basic-title', size: 'sl' })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 }

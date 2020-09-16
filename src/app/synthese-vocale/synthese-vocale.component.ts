@@ -58,9 +58,26 @@ export class SyntheseVocaleComponent implements OnInit {
     });
 
     this.audioSrc = '';
+    this.exercice_data.splice(0, this.exercice_data.length);
     this.synth_service.getExerciceData().subscribe(
       (response) => {
-        this.exercice_data = response;
+        let listExercice: any = [];
+        listExercice = response;
+        listExercice.forEach((element) => {
+          if (element.TypeAudio) {
+            this.exercice_data.push({
+              id: element.id,
+              DataTexte: element.DataTexte,
+              DataMemo: element.DataMemo,
+              NomFichier: element.NomFichier,
+              TypeTexte: element.TypeTexte,
+              TypeAudio: element.TypeAudio,
+              TypeVideo: element.TypeVideo,
+              DescriptifData: element.DescriptifData,
+            });
+          }
+        });
+        // this.exercice_data = response;
       },
       (error) => {
         console.log(error);
@@ -82,8 +99,8 @@ export class SyntheseVocaleComponent implements OnInit {
     };
 
     this.synth_service.deleteall().subscribe((res) => {
-      const payload = this.textSynthForm.value;
-      this.synth_service.createSynth(payload).subscribe((result: any) => {
+      const texte = this.textSynthForm.value;
+      this.synth_service.createSynth(texte).subscribe((result: any) => {
         if (result.UrlAudio != '') {
           this.indication_synth = true;
           this.isload = false;
@@ -92,7 +109,7 @@ export class SyntheseVocaleComponent implements OnInit {
 
           this.audioSrc = `${result.UrlAudio}`;
 
-          this.LireSon(result.UrlAudio);
+          // this.LireSon(result.UrlAudio);
         }
       });
     });
