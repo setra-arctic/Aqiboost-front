@@ -26,6 +26,7 @@ import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_pla
 import { DataComponent } from './data/data.component';
 import { EspaceEnfantsComponent } from './espace-enfants/espace-enfants.component';
 import { SequenceComponent } from './sequence/sequence.component';
+import { SessionComponent } from './session/session.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { SequenceComponent } from './sequence/sequence.component';
     DataComponent,
     EspaceEnfantsComponent,
     SequenceComponent,
+    SessionComponent,
   ],
   imports: [
     BrowserModule,

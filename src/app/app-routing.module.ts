@@ -1,3 +1,5 @@
+import { SessionComponent } from './session/session.component';
+import { SequenceComponent } from './sequence/sequence.component';
 import { EspaceEnfantsComponent } from './espace-enfants/espace-enfants.component';
 import { DataComponent } from './data/data.component';
 import { InscriptionParentsComponent } from './inscription-parents/inscription-parents.component';
@@ -66,6 +68,14 @@ const routes: Routes = [
   {
     path: 'enfant',
     component: EspaceEnfantsComponent,
+  },
+  {
+    path: 'sequence',
+    component: SequenceComponent,
+  },
+  {
+    path: 'session',
+    component: SessionComponent,
   },
 ];
 

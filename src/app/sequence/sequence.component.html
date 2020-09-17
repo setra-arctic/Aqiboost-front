@@ -1,23 +1,60 @@
 <form>
   <div class="btn-group mb-3" role="group" aria-label="Basic example">
-    <button type="button" class="btn btn-secondary">Ajouter une séquence</button>
+    <button type="button" class="btn btn-secondary" (click)="modifieSequenceMode('Ajouter', '')"
+      (click)="open(popupSequence)">Ajouter une séquence</button>
   </div>
-  <div class="card mt-4" style="min-height: 50px;">
+  <div class="card mt-4" style="min-height: 50px; width: 350px; margin :auto">
     <div class="card-header">Liste des séquences</div>
     <div>
       <table class="table table-hover">
+        <thead>
+          <th style="width: 75px">Numero</th>
+          <th>Séquence</th>
+        </thead>
         <tbody>
           <tr *ngFor="let Sequence of listeSequence">
+            <td>{{ Sequence.numero }}</td>
             <td>{{ Sequence.sequence }}</td>
             <td>
-              <button class="btn btn-primary btn-sm mr-2" style="width: 50px;"><img
-                  src="../../assets/images/editer.png"></button>
-              <button class="btn btn-primary btn-sm" style="width: 50px;"><img
-                  src="../../assets/images/supprimer.png"></button>
+              <button class="btn btn-primary btn-sm mr-2" style="width: 50px;"><img src="../../assets/images/editer.png"
+                  (click)="modifieSequenceMode('Modifier', Sequence.id)" (click)="open(popupSequence)"></button>
+              <button class="btn btn-primary btn-sm" style="width: 50px;"><img src="../../assets/images/supprimer.png"
+                  (click)="supprSequence(Sequence.id)"></button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <div>
+    <button class="btn btn-primary btn-sm" [routerLink]="['/session']" routerLinkActive="router-link-active"
+      style="width: 200px; margin-top: 5px;">Sessions</button>
+  </div>
 </form>
+
+<!-- ------------------------------popupSequence-------------------------- -->
+<ng-template #popupSequence let-modal>
+  <div class="modal-body">
+    <form [formGroup]="formSequence">
+
+      <label>Numero</label>
+      <input type="number" class="form-control" style="margin-bottom: 10px; width:75px" #numero formControlName="numero"
+        disabled>
+
+      <label>Séquence</label>
+      <input type="text" class="form-control" style="margin-bottom: 10px" #nom formControlName="sequence"
+        (keyup)="keyupSequence(nom.value)" (change)="keyupSequence(nom.value)">
+
+      <div style="text-align: center; margin-top: 20px; margin-bottom: 10px;">
+        <button class="btn btn-primary" (click)="modal.close('sequence')"
+          [disabled]="invalidSequence">{{sequenceMode}}</button>
+      </div>
+      <div *ngIf="validSequence" style="font-size: smaller; margin-top: 10px">
+        <span>Nom de séquence invalide</span>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">Fermer</button>
+  </div>
+</ng-template>
