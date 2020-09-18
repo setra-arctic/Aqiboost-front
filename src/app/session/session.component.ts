@@ -32,12 +32,11 @@ export class SessionComponent implements OnInit {
     this.formSession = this.form_builder.group({
       session: [],
     });
-    this.sequence.getSequences().subscribe((res) => {
-      this.listeSequence = res;
-    });
-    this.session.getSessions().subscribe((res) => {
-      this.listeSession = res;
-    });
+    if (this.listeSequence.length == 0) {
+      this.sequence.getSequences().subscribe((res) => {
+        this.listeSequence = res;
+      });
+    }
   }
 
   selectSequence(id) {
@@ -46,6 +45,11 @@ export class SessionComponent implements OnInit {
       this.selectedSequence = true;
     } else {
       this.selectedSequence = false;
+      this.session
+        .getSessionsBySequence(this.sequenceSelected)
+        .subscribe((res) => {
+          this.listeSession = res;
+        });
     }
   }
 
@@ -54,7 +58,10 @@ export class SessionComponent implements OnInit {
       case 'Ajouter':
         this.invalidSession = false;
         this.listeSession.forEach((element) => {
-          if (session == element.session) {
+          if (
+            session == element.session &&
+            this.sequenceSelected == element.sequenceId
+          ) {
             this.invalidSession = true;
           }
         });
@@ -65,7 +72,11 @@ export class SessionComponent implements OnInit {
       case 'Modifier':
         this.invalidSession = false;
         this.listeSession.forEach((element) => {
-          if (session == element.session && element.id != this.sessionId) {
+          if (
+            session == element.session &&
+            element.id != this.sessionId &&
+            this.sequenceSelected == element.sequenceId
+          ) {
             this.invalidSession = true;
           }
         });
@@ -88,7 +99,7 @@ export class SessionComponent implements OnInit {
         let resSession: any = {};
         resSession = res;
         this.formSession.patchValue({
-          session: resSession[0].sequence,
+          session: resSession[0].session,
         });
       });
       this.sessionId = id;
@@ -101,19 +112,31 @@ export class SessionComponent implements OnInit {
       .result.then(
         (result) => {
           if (result == 'session') {
+            let enreg: any = {};
+            enreg = this.formSession.value;
+            enreg.sequenceId = this.sequenceSelected;
             switch (this.sessionMode) {
               case 'Ajouter':
-                this.session
-                  .addSession(this.formSession.value)
-                  .subscribe(() => {
-                    this.ngOnInit();
+                this.session.addSession(enreg).subscribe(() => {
+                  this.session
+                    .getSessionsBySequence(this.sequenceSelected)
+                    .subscribe((res) => {
+                      this.listeSession = res;
+                    });
+                  this.formSession.patchValue({
+                    session: '',
                   });
+                });
                 break;
               case 'Modifier':
                 this.session
-                  .modifSession(this.sessionId, this.formSession.value)
+                  .modifSession(this.sessionId, enreg)
                   .subscribe(() => {
-                    this.ngOnInit();
+                    this.session
+                      .getSessionsBySequence(this.sequenceSelected)
+                      .subscribe((res) => {
+                        this.listeSession = res;
+                      });
                   });
                 break;
             }
@@ -137,7 +160,11 @@ export class SessionComponent implements OnInit {
 
   supprSession(id) {
     this.session.supprSession(id).subscribe(() => {
-      this.ngOnInit();
+      this.session
+        .getSessionsBySequence(this.sequenceSelected)
+        .subscribe((res) => {
+          this.listeSession = res;
+        });
     });
   }
 }

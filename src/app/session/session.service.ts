@@ -50,4 +50,14 @@ export class SessionService {
       })
     );
   }
+
+  getSessionsBySequence(sequenceId) {
+    return this.http
+      .get(`${environment.apiUrl}/getSessionsBySequence/` + sequenceId)
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
 }
