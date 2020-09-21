@@ -2,7 +2,9 @@
   width: 60px;
   height: 60px;
   font-size: x-large;
+  padding: 1px 1px 1px 1px;
 }
+
 
 .green {
   background-color: green;

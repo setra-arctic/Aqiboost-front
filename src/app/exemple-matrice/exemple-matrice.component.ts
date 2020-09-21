@@ -1,7 +1,7 @@
 import { PopupDataExerciceService } from './../liste-exercices/fiche-exercice/popup-data-exercice/popup-data-exercice.service';
 import { ExempleMatriceService } from './exemple-matrice.service';
 import { ListeExercicesService } from './../liste-exercices/liste-exercices.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Uuid } from 'aws-sdk/clients/groundstation';
 
@@ -28,12 +28,16 @@ export class ExempleMatriceComponent implements OnInit {
   listCaract: any = [];
   listCaractSaisie: any = [];
   texteSaisie = '';
+  keyboardOff = true;
+  lockImage = 'Cadena verouillé.png';
+  nbFautes = 0;
 
   constructor(
     private form_builder: FormBuilder,
     private BaseExercice: ListeExercicesService,
     private ExerciceData: ExempleMatriceService,
-    private dataAudio: PopupDataExerciceService
+    private dataAudio: PopupDataExerciceService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -56,18 +60,19 @@ export class ExempleMatriceComponent implements OnInit {
       shiftKey: false,
       greenStatus: false,
       redStatus: false,
-      disabled: false,
+      disabled: true,
     });
 
     this.ExerciceData.getKey().subscribe((res) => {
       // console.log(res);
       this.listKey = res;
+      if (!this.listKey) {
+      } else {
+        this.listKey.forEach((element) => {
+          element.disabled = true;
+        });
+      }
     });
-    if (this.listKey.length > 0) {
-      this.listKey.forEach((element) => {
-        element.disabled = true;
-      });
-    }
   }
 
   click_tr(id_selected) {
@@ -133,6 +138,7 @@ export class ExempleMatriceComponent implements OnInit {
   keyPress(keyPressed) {
     let i = 0;
     let keyExist = false;
+    let indiceCaractValide = -1;
 
     if (keyPressed.key == 'Shift') {
       for (i = 2; i <= 48; i++) {
@@ -157,6 +163,18 @@ export class ExempleMatriceComponent implements OnInit {
       }
     }
 
+    // Chercher l'indice du caractère valide
+    i = -1;
+    this.listKey.forEach((element) => {
+      i++;
+      if (
+        element.key == this.listCaract[this.listCaractSaisie.length].caract ||
+        element.key == this.listCaract[this.listCaractSaisie.length].otherCaract
+      ) {
+        indiceCaractValide = i;
+      }
+    });
+
     this.listKey.forEach((element) => {
       if (element.key == keyPressed.key) {
         // console.log(
@@ -177,9 +195,41 @@ export class ExempleMatriceComponent implements OnInit {
           });
         } else {
           element.redStatus = true;
+          if (element.key != 'Shift') {
+            this.nbFautes++;
+          }
         }
       }
     });
+
+    if (this.nbFautes == 2) {
+      this.keyboardStatus(false);
+      if (indiceCaractValide > -1) {
+        if (this.listKey[indiceCaractValide].shiftKey == true) {
+          for (i = 2; i <= 48; i++) {
+            keyExist = false;
+            this.tempListKey.forEach((element) => {
+              if (element.key == this.listKey[i].key) {
+                keyExist = true;
+              }
+            });
+
+            if (!keyExist) {
+              this.tempListKey.push({
+                key: this.listKey[i].key,
+                shiftKey: false,
+                greenStatus: false,
+                redStatus: false,
+                disabled: false,
+              });
+            }
+
+            this.listKey[i].key = this.listKey[i + 48].key;
+          }
+        }
+        this.listKey[indiceCaractValide].greenStatus = true;
+      }
+    }
 
     if (keyPressed.key == 'Dead') {
       this.listKey[24].redStatus = true;
@@ -206,7 +256,7 @@ export class ExempleMatriceComponent implements OnInit {
     }
 
     this.listKey.forEach((element) => {
-      if (element.key == keyPressed.key) {
+      if (element.key == keyPressed.key && this.nbFautes < 2) {
         element.greenStatus = false;
         element.redStatus = false;
       }
@@ -224,5 +274,24 @@ export class ExempleMatriceComponent implements OnInit {
         console.log(res);
       });
     }
+  }
+
+  keyboardStatus(status) {
+    switch (status) {
+      case true:
+        this.lockImage = 'Cadena déverouillé.png';
+        this.keyboardOff = false;
+        this.nbFautes = 0;
+        break;
+      case false:
+        this.lockImage = 'Cadena verouillé.png';
+        this.keyboardOff = true;
+        break;
+    }
+    this.listKey.forEach((element) => {
+      element.disabled = this.keyboardOff;
+      element.redStatus = false;
+      element.greenStatus = false;
+    });
   }
 }

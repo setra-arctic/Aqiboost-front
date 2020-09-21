@@ -1,8 +1,4 @@
-<form
-  [formGroup]="FormExempleMatrice"
-  (keydown)="keyPress($event)"
-  (keyup)="keyDown($event)"
->
+<form [formGroup]="FormExempleMatrice" (keydown)="keyPress($event)" (keyup)="keyDown($event)">
   <div class="row justify-content-center">
     <div class="card mt-4" style="min-height: 50px; width: 550px">
       <div class="card-header">Liste des bases d'exercice</div>
@@ -15,11 +11,8 @@
           </thead>
 
           <tbody>
-            <tr
-              *ngFor="let BaseExercice of base_exercice"
-              (click)="click_tr(BaseExercice.id)"
-              [ngClass]="{ 'table-active': BaseExercice.id == idBaseExercice }"
-            >
+            <tr *ngFor="let BaseExercice of base_exercice" (click)="click_tr(BaseExercice.id)"
+              [ngClass]="{ 'table-active': BaseExercice.id == idBaseExercice }">
               <td>{{ BaseExercice.NumeroExercice }}</td>
               <td>{{ BaseExercice.Titre }}</td>
               <td>{{ BaseExercice.DescriptifExercice }}</td>
@@ -29,10 +22,7 @@
       </div>
     </div>
 
-    <div
-      class="card mt-4"
-      style="min-height: 50px; width: 550px; margin-left: 10px"
-    >
+    <div class="card mt-4" style="min-height: 50px; width: 550px; margin-left: 10px">
       <div class="card-header">Contenu audio d'une base d'exercice</div>
       <div>
         <table class="table table-hover" style="height: auto">
@@ -42,11 +32,8 @@
           </thead>
 
           <tbody>
-            <tr
-              *ngFor="let ExerciceData of exercice_data"
-              (click)="selectExerciceData(ExerciceData.id)"
-              [ngClass]="{ 'table-active': ExerciceData.id == idExerciceData }"
-            >
+            <tr *ngFor="let ExerciceData of exercice_data" (click)="selectExerciceData(ExerciceData.id)"
+              [ngClass]="{ 'table-active': ExerciceData.id == idExerciceData }">
               <td>{{ ExerciceData.id }}</td>
               <td>{{ ExerciceData.DescriptifData }}</td>
             </tr>
@@ -62,169 +49,98 @@
     <div class="card-body">
       <h5 class="card-title">Dictée de phrase</h5>
       <div style="margin-top: 10px">
-        <button
-          class="btn btn-primary btn-sm"
-          [disabled]="!audioOK"
-          style="width: 200px; font-size: medium; height: 35px"
-        >
+        <button class="btn btn-primary btn-sm" [disabled]="!audioOK"
+          style="width: 200px; font-size: medium; height: 35px" (click)="keyboardStatus(true)">
           Commencer la dictée
         </button>
         <div style="margin-top: 10px">
-          <audio
-            id="audioPlayback"
-            controls
-            preload="auto"
-            [src]="url_fichier"
-          ></audio>
+          <audio id="audioPlayback" controls preload="auto" [src]="url_fichier"></audio>
         </div>
       </div>
-      <input
-        type="text"
-        class="form-control"
-        id="title"
-        formControlName="saisie"
-        disabled
-        style="margin-top: 10px"
-      />
+      <textarea type="text" class="form-control" id="title" formControlName="saisie" disabled
+        style="margin-top: 10px; "></textarea>
 
-      <div class="keyBoard">
+      <div class="special-div">
         <div class="row justify-content-center">
           <div style="margin-top: 20px">
-            <div
-              class="btn-toolbar"
-              role="toolbar"
-              aria-label="Toolbar with button groups"
-            >
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
               <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[1].greenStatus,
                     red: listKey[1].redStatus
-                  }"
-                  [disabled]="listKey[1].disabled"
-                >
+                  }" [disabled]="listKey[1].disabled">
                   {{ listKey[1].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[2].greenStatus,
                     red: listKey[2].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[2].disabled">
                   {{ listKey[2].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[3].greenStatus,
                     red: listKey[3].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[3].disabled">
                   {{ listKey[3].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[4].greenStatus,
                     red: listKey[4].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[4].disabled">
                   {{ listKey[4].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[5].greenStatus,
                     red: listKey[5].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[5].disabled">
                   {{ listKey[5].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[6].greenStatus,
                     red: listKey[6].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[6].disabled">
                   {{ listKey[6].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[7].greenStatus,
                     red: listKey[7].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[7].disabled">
                   {{ listKey[7].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[8].greenStatus,
                     red: listKey[8].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[8].disabled">
                   {{ listKey[8].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[9].greenStatus,
                     red: listKey[9].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[9].disabled">
                   {{ listKey[9].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[10].greenStatus,
                     red: listKey[10].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[10].disabled">
                   {{ listKey[10].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[11].greenStatus,
                     red: listKey[11].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[11].disabled">
                   {{ listKey[11].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[12].greenStatus,
                     red: listKey[12].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[12].disabled">
                   {{ listKey[12].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[13].greenStatus,
                     red: listKey[13].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[13].disabled">
                   {{ listKey[13].key }}
                 </button>
               </div>
@@ -234,130 +150,78 @@
 
         <div class="row justify-content-center">
           <div style="margin-top: 5px">
-            <div
-              class="btn-toolbar"
-              role="toolbar"
-              aria-label="Toolbar with button groups"
-            >
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
               <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[14].greenStatus,
                     red: listKey[14].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[14].disabled">
                   {{ listKey[14].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[15].greenStatus,
                     red: listKey[15].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[15].disabled">
                   {{ listKey[15].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[16].greenStatus,
                     red: listKey[16].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[16].disabled">
                   {{ listKey[16].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[17].greenStatus,
                     red: listKey[17].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[17].disabled">
                   {{ listKey[17].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[18].greenStatus,
                     red: listKey[18].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[18].disabled">
                   {{ listKey[18].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[19].greenStatus,
                     red: listKey[19].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[19].disabled">
                   {{ listKey[19].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[20].greenStatus,
                     red: listKey[20].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[20].disabled">
                   {{ listKey[20].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[21].greenStatus,
                     red: listKey[21].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[21].disabled">
                   {{ listKey[21].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[22].greenStatus,
                     red: listKey[22].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[22].disabled">
                   {{ listKey[22].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[23].greenStatus,
                     red: listKey[23].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[23].disabled">
                   {{ listKey[23].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[24].greenStatus,
                     red: listKey[24].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[24].disabled">
                   {{ listKey[24].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[25].greenStatus,
                     red: listKey[25].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[25].disabled">
                   {{ listKey[25].key }}
                 </button>
               </div>
@@ -367,130 +231,78 @@
 
         <div class="row justify-content-center">
           <div style="margin-top: 5px">
-            <div
-              class="btn-toolbar"
-              role="toolbar"
-              aria-label="Toolbar with button groups"
-            >
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
               <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[26].greenStatus,
                     red: listKey[26].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[26].disabled">
                   {{ listKey[26].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[27].greenStatus,
                     red: listKey[27].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[27].disabled">
                   {{ listKey[27].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[28].greenStatus,
                     red: listKey[28].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[28].disabled">
                   {{ listKey[28].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[29].greenStatus,
                     red: listKey[29].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[29].disabled">
                   {{ listKey[29].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[30].greenStatus,
                     red: listKey[30].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[30].disabled">
                   {{ listKey[30].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[31].greenStatus,
                     red: listKey[31].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[31].disabled">
                   {{ listKey[31].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[32].greenStatus,
                     red: listKey[32].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[32].disabled">
                   {{ listKey[32].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[33].greenStatus,
                     red: listKey[33].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[33].disabled">
                   {{ listKey[33].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[34].greenStatus,
                     red: listKey[34].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[34].disabled">
                   {{ listKey[34].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[35].greenStatus,
                     red: listKey[35].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[35].disabled">
                   {{ listKey[35].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[36].greenStatus,
                     red: listKey[36].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[36].disabled">
                   {{ listKey[36].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[37].greenStatus,
                     red: listKey[37].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[37].disabled">
                   {{ listKey[37].key }}
                 </button>
               </div>
@@ -500,148 +312,85 @@
 
         <div class="row justify-content-center">
           <div style="margin-top: 5px">
-            <div
-              class="btn-toolbar"
-              role="toolbar"
-              aria-label="Toolbar with button groups"
-            >
-              <button
-                type="button"
-                class="btn btn-secondary"
-                style="width: 120px"
-                [ngClass]="{
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+              <button type="button" class="btn btn-secondary" style="width: 120px" [ngClass]="{
                   green: listKey[49].greenStatus,
                   red: listKey[49].redStatus
-                }"
-              >
+                }" [disabled]="listKey[49].disabled">
                 {{ listKey[49].key }}
               </button>
-              <div
-                class="btn-group mr-2"
-                role="group"
-                aria-label="First group"
-                style="margin-left: 8px"
-              >
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+              <div class="btn-group mr-2" role="group" aria-label="First group" style="margin-left: 8px">
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[38].greenStatus,
                     red: listKey[38].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[38].disabled">
                   {{ listKey[38].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[39].greenStatus,
                     red: listKey[39].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[39].disabled">
                   {{ listKey[39].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[40].greenStatus,
                     red: listKey[40].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[40].disabled">
                   {{ listKey[40].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[41].greenStatus,
                     red: listKey[41].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[41].disabled">
                   {{ listKey[41].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[42].greenStatus,
                     red: listKey[42].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[42].disabled">
                   {{ listKey[42].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[43].greenStatus,
                     red: listKey[43].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[43].disabled">
                   {{ listKey[43].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[44].greenStatus,
                     red: listKey[44].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[44].disabled">
                   {{ listKey[44].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[45].greenStatus,
                     red: listKey[45].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[45].disabled">
                   {{ listKey[45].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[46].greenStatus,
                     red: listKey[46].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[46].disabled">
                   {{ listKey[46].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[47].greenStatus,
                     red: listKey[47].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[47].disabled">
                   {{ listKey[47].key }}
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  [ngClass]="{
+                <button type="button" class="btn btn-secondary" [ngClass]="{
                     green: listKey[48].greenStatus,
                     red: listKey[48].redStatus
-                  }"
-                >
+                  }" [disabled]="listKey[48].disabled">
                   {{ listKey[48].key }}
                 </button>
               </div>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                style="width: 120px"
-                [ngClass]="{
+              <button type="button" class="btn btn-secondary" style="width: 120px" [ngClass]="{
                   green: listKey[49].greenStatus,
                   red: listKey[49].redStatus
-                }"
-              >
+                }" [disabled]="listKey[49].disabled">
                 {{ listKey[49].key }}
               </button>
             </div>
@@ -650,21 +399,15 @@
 
         <div class="row justify-content-center">
           <div style="margin-top: 5px">
-            <div
-              class="btn-toolbar"
-              role="toolbar"
-              aria-label="Toolbar with button groups"
-            >
-              <button
-                type="button"
-                class="btn btn-secondary"
-                style="width: 360px"
-                [ngClass]="{
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+              <button type="button" class="btn btn-secondary" style="width: 360px" [ngClass]="{
                   green: listKey[0].greenStatus,
                   red: listKey[0].redStatus
-                }"
-              >
+                }" [disabled]="listKey[0].disabled">
                 {{ listKey[0].key }}
+              </button>
+              <button class="btn btn-secondary" style="margin-left:5px" (click)="keyboardStatus(keyboardOff)">
+                <img src="../../assets/images/{{lockImage}}" />
               </button>
             </div>
           </div>
