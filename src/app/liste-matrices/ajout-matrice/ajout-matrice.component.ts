@@ -127,7 +127,6 @@ export class AjoutMatriceComponent implements OnInit {
             enreg.url_image = this.image_url;
             enreg.ParamEntree = this.listeParamEntree;
             enreg.ParamSortie = this.listeParamSortie;
-            console.log(this.listeParamSortie);
             this.matrice_service.Ajout_matrice(enreg).subscribe(
               (response) => {
                 // ADD TagMatriceExercice

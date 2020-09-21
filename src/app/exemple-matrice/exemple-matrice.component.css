@@ -1,0 +1,13 @@
+.btn {
+  width: 60px;
+  height: 60px;
+  font-size: x-large;
+}
+
+.green {
+  background-color: green;
+}
+
+.red {
+  background-color: red;
+}

@@ -1,3 +1,5 @@
+import { ToastrService } from 'ngx-toastr';
+import { ListeExercicesService } from './../liste-exercices/liste-exercices.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SessionService } from './session.service';
@@ -12,20 +14,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SessionComponent implements OnInit {
   sequenceSelected: Uuid;
+  idExerciceSelected: Uuid;
   listeSequence: any = [];
   listeSession: any = [];
+  listeExercice: any = [];
+  listeSessionExercice: any = [];
   formSession: FormGroup;
   invalidSession = false;
   sessionMode = 'Ajouter';
   sessionId: Uuid;
   closeResult = '';
   selectedSequence = true;
+  nom_session: '';
 
   constructor(
     private sequence: SequenceService,
     private form_builder: FormBuilder,
     private modalService: NgbModal,
-    private session: SessionService
+    private session: SessionService,
+    private Toast: ToastrService,
+    private baseExercice: ListeExercicesService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +43,11 @@ export class SessionComponent implements OnInit {
     if (this.listeSequence.length == 0) {
       this.sequence.getSequences().subscribe((res) => {
         this.listeSequence = res;
+      });
+    }
+    if (this.listeExercice.length == 0) {
+      this.baseExercice.getBaseExercices().subscribe((res) => {
+        this.listeExercice = res;
       });
     }
   }
@@ -94,21 +107,26 @@ export class SessionComponent implements OnInit {
         sequence: '',
       });
       this.invalidSession = true;
-    } else if (mode == 'Modifier') {
+    } else if (mode == 'Modifier' || mode == 'sessionExercice') {
       this.session.getASession(id).subscribe((res) => {
-        let resSession: any = {};
-        resSession = res;
         this.formSession.patchValue({
-          session: resSession[0].session,
+          session: res[0].session,
         });
+        this.nom_session = res[0].session;
       });
       this.sessionId = id;
+
+      if (mode == 'sessionExercice') {
+        this.session.getSessionExercice(id).subscribe((res) => {
+          this.listeSessionExercice = res;
+        });
+      }
     }
   }
 
-  open(popup) {
+  open(popup, size) {
     this.modalService
-      .open(popup, { ariaLabelledBy: 'modal-basic-title', size: 'sl' })
+      .open(popup, { ariaLabelledBy: 'modal-basic-title', size: size })
       .result.then(
         (result) => {
           if (result == 'session') {
@@ -166,5 +184,28 @@ export class SessionComponent implements OnInit {
           this.listeSession = res;
         });
     });
+  }
+
+  selectExercice(id) {
+    this.idExerciceSelected = id;
+  }
+
+  createSessionExercice(sessionId, baseExerciceId) {
+    let enreg: any = {};
+    let exerciceExistant = false;
+
+    this.listeSessionExercice.forEach((element) => {
+      if (element.baseExerciceId == baseExerciceId) {
+        exerciceExistant = true;
+      }
+    });
+
+    if (!exerciceExistant) {
+      enreg.sessionId = sessionId;
+      enreg.baseExerciceId = baseExerciceId;
+      this.session.createSessionExercice(enreg).subscribe(() => {
+        this.modifieSessionMode('sessionExercice', sessionId);
+      });
+    }
   }
 }

@@ -1,20 +1,25 @@
-<form [formGroup]="FormExempleMatrice">
-  <div>
-    <div class="btn-group mb-3" role="group" aria-label="Basic example">
-    </div>
-    <div class="card mt-4" style="min-height: 50px; width : 550px">
+<form
+  [formGroup]="FormExempleMatrice"
+  (keydown)="keyPress($event)"
+  (keyup)="keyDown($event)"
+>
+  <div class="row justify-content-center">
+    <div class="card mt-4" style="min-height: 50px; width: 550px">
       <div class="card-header">Liste des bases d'exercice</div>
       <div>
         <table class="table table-hover">
           <thead>
-            <th style="width:50px">Numero</th>
+            <th style="width: 50px">Numero</th>
             <th>Titre</th>
             <th>Descriptif</th>
           </thead>
 
           <tbody>
-            <tr *ngFor="let BaseExercice of base_exercice" (click)="click_tr(BaseExercice.id)"
-              [ngClass]="{'table-active': BaseExercice.id == idBaseExercice}">
+            <tr
+              *ngFor="let BaseExercice of base_exercice"
+              (click)="click_tr(BaseExercice.id)"
+              [ngClass]="{ 'table-active': BaseExercice.id == idBaseExercice }"
+            >
               <td>{{ BaseExercice.NumeroExercice }}</td>
               <td>{{ BaseExercice.Titre }}</td>
               <td>{{ BaseExercice.DescriptifExercice }}</td>
@@ -23,26 +28,648 @@
         </table>
       </div>
     </div>
+
+    <div
+      class="card mt-4"
+      style="min-height: 50px; width: 550px; margin-left: 10px"
+    >
+      <div class="card-header">Contenu audio d'une base d'exercice</div>
+      <div>
+        <table class="table table-hover" style="height: auto">
+          <thead>
+            <th style="width: 50px">id</th>
+            <th>Descriptif</th>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let ExerciceData of exercice_data"
+              (click)="selectExerciceData(ExerciceData.id)"
+              [ngClass]="{ 'table-active': ExerciceData.id == idExerciceData }"
+            >
+              <td>{{ ExerciceData.id }}</td>
+              <td>{{ ExerciceData.DescriptifData }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr style="margin-left: 0px" />
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Dictée de phrase</h5>
+      <div style="margin-top: 10px">
+        <button
+          class="btn btn-primary btn-sm"
+          [disabled]="!audioOK"
+          style="width: 200px; font-size: medium; height: 35px"
+        >
+          Commencer la dictée
+        </button>
+        <div style="margin-top: 10px">
+          <audio
+            id="audioPlayback"
+            controls
+            preload="auto"
+            [src]="url_fichier"
+          ></audio>
+        </div>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        formControlName="saisie"
+        disabled
+        style="margin-top: 10px"
+      />
+
+      <div class="keyBoard">
+        <div class="row justify-content-center">
+          <div style="margin-top: 20px">
+            <div
+              class="btn-toolbar"
+              role="toolbar"
+              aria-label="Toolbar with button groups"
+            >
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[1].greenStatus,
+                    red: listKey[1].redStatus
+                  }"
+                  [disabled]="listKey[1].disabled"
+                >
+                  {{ listKey[1].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[2].greenStatus,
+                    red: listKey[2].redStatus
+                  }"
+                >
+                  {{ listKey[2].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[3].greenStatus,
+                    red: listKey[3].redStatus
+                  }"
+                >
+                  {{ listKey[3].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[4].greenStatus,
+                    red: listKey[4].redStatus
+                  }"
+                >
+                  {{ listKey[4].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[5].greenStatus,
+                    red: listKey[5].redStatus
+                  }"
+                >
+                  {{ listKey[5].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[6].greenStatus,
+                    red: listKey[6].redStatus
+                  }"
+                >
+                  {{ listKey[6].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[7].greenStatus,
+                    red: listKey[7].redStatus
+                  }"
+                >
+                  {{ listKey[7].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[8].greenStatus,
+                    red: listKey[8].redStatus
+                  }"
+                >
+                  {{ listKey[8].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[9].greenStatus,
+                    red: listKey[9].redStatus
+                  }"
+                >
+                  {{ listKey[9].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[10].greenStatus,
+                    red: listKey[10].redStatus
+                  }"
+                >
+                  {{ listKey[10].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[11].greenStatus,
+                    red: listKey[11].redStatus
+                  }"
+                >
+                  {{ listKey[11].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[12].greenStatus,
+                    red: listKey[12].redStatus
+                  }"
+                >
+                  {{ listKey[12].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[13].greenStatus,
+                    red: listKey[13].redStatus
+                  }"
+                >
+                  {{ listKey[13].key }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div style="margin-top: 5px">
+            <div
+              class="btn-toolbar"
+              role="toolbar"
+              aria-label="Toolbar with button groups"
+            >
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[14].greenStatus,
+                    red: listKey[14].redStatus
+                  }"
+                >
+                  {{ listKey[14].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[15].greenStatus,
+                    red: listKey[15].redStatus
+                  }"
+                >
+                  {{ listKey[15].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[16].greenStatus,
+                    red: listKey[16].redStatus
+                  }"
+                >
+                  {{ listKey[16].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[17].greenStatus,
+                    red: listKey[17].redStatus
+                  }"
+                >
+                  {{ listKey[17].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[18].greenStatus,
+                    red: listKey[18].redStatus
+                  }"
+                >
+                  {{ listKey[18].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[19].greenStatus,
+                    red: listKey[19].redStatus
+                  }"
+                >
+                  {{ listKey[19].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[20].greenStatus,
+                    red: listKey[20].redStatus
+                  }"
+                >
+                  {{ listKey[20].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[21].greenStatus,
+                    red: listKey[21].redStatus
+                  }"
+                >
+                  {{ listKey[21].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[22].greenStatus,
+                    red: listKey[22].redStatus
+                  }"
+                >
+                  {{ listKey[22].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[23].greenStatus,
+                    red: listKey[23].redStatus
+                  }"
+                >
+                  {{ listKey[23].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[24].greenStatus,
+                    red: listKey[24].redStatus
+                  }"
+                >
+                  {{ listKey[24].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[25].greenStatus,
+                    red: listKey[25].redStatus
+                  }"
+                >
+                  {{ listKey[25].key }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div style="margin-top: 5px">
+            <div
+              class="btn-toolbar"
+              role="toolbar"
+              aria-label="Toolbar with button groups"
+            >
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[26].greenStatus,
+                    red: listKey[26].redStatus
+                  }"
+                >
+                  {{ listKey[26].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[27].greenStatus,
+                    red: listKey[27].redStatus
+                  }"
+                >
+                  {{ listKey[27].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[28].greenStatus,
+                    red: listKey[28].redStatus
+                  }"
+                >
+                  {{ listKey[28].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[29].greenStatus,
+                    red: listKey[29].redStatus
+                  }"
+                >
+                  {{ listKey[29].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[30].greenStatus,
+                    red: listKey[30].redStatus
+                  }"
+                >
+                  {{ listKey[30].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[31].greenStatus,
+                    red: listKey[31].redStatus
+                  }"
+                >
+                  {{ listKey[31].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[32].greenStatus,
+                    red: listKey[32].redStatus
+                  }"
+                >
+                  {{ listKey[32].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[33].greenStatus,
+                    red: listKey[33].redStatus
+                  }"
+                >
+                  {{ listKey[33].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[34].greenStatus,
+                    red: listKey[34].redStatus
+                  }"
+                >
+                  {{ listKey[34].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[35].greenStatus,
+                    red: listKey[35].redStatus
+                  }"
+                >
+                  {{ listKey[35].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[36].greenStatus,
+                    red: listKey[36].redStatus
+                  }"
+                >
+                  {{ listKey[36].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[37].greenStatus,
+                    red: listKey[37].redStatus
+                  }"
+                >
+                  {{ listKey[37].key }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div style="margin-top: 5px">
+            <div
+              class="btn-toolbar"
+              role="toolbar"
+              aria-label="Toolbar with button groups"
+            >
+              <button
+                type="button"
+                class="btn btn-secondary"
+                style="width: 120px"
+                [ngClass]="{
+                  green: listKey[49].greenStatus,
+                  red: listKey[49].redStatus
+                }"
+              >
+                {{ listKey[49].key }}
+              </button>
+              <div
+                class="btn-group mr-2"
+                role="group"
+                aria-label="First group"
+                style="margin-left: 8px"
+              >
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[38].greenStatus,
+                    red: listKey[38].redStatus
+                  }"
+                >
+                  {{ listKey[38].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[39].greenStatus,
+                    red: listKey[39].redStatus
+                  }"
+                >
+                  {{ listKey[39].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[40].greenStatus,
+                    red: listKey[40].redStatus
+                  }"
+                >
+                  {{ listKey[40].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[41].greenStatus,
+                    red: listKey[41].redStatus
+                  }"
+                >
+                  {{ listKey[41].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[42].greenStatus,
+                    red: listKey[42].redStatus
+                  }"
+                >
+                  {{ listKey[42].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[43].greenStatus,
+                    red: listKey[43].redStatus
+                  }"
+                >
+                  {{ listKey[43].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[44].greenStatus,
+                    red: listKey[44].redStatus
+                  }"
+                >
+                  {{ listKey[44].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[45].greenStatus,
+                    red: listKey[45].redStatus
+                  }"
+                >
+                  {{ listKey[45].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[46].greenStatus,
+                    red: listKey[46].redStatus
+                  }"
+                >
+                  {{ listKey[46].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[47].greenStatus,
+                    red: listKey[47].redStatus
+                  }"
+                >
+                  {{ listKey[47].key }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  [ngClass]="{
+                    green: listKey[48].greenStatus,
+                    red: listKey[48].redStatus
+                  }"
+                >
+                  {{ listKey[48].key }}
+                </button>
+              </div>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                style="width: 120px"
+                [ngClass]="{
+                  green: listKey[49].greenStatus,
+                  red: listKey[49].redStatus
+                }"
+              >
+                {{ listKey[49].key }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div style="margin-top: 5px">
+            <div
+              class="btn-toolbar"
+              role="toolbar"
+              aria-label="Toolbar with button groups"
+            >
+              <button
+                type="button"
+                class="btn btn-secondary"
+                style="width: 360px"
+                [ngClass]="{
+                  green: listKey[0].greenStatus,
+                  red: listKey[0].redStatus
+                }"
+              >
+                {{ listKey[0].key }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </form>
-
-<div class="card" style="min-height: 50px; width : 550px; ">
-  <div class="card-header">Contenu audio d'une base d'exercice</div>
-  <div>
-    <table class="table table-hover">
-      <thead>
-        <th style="width:50px">id</th>
-        <th>Descriptif</th>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let ExerciceData of exercice_data">
-          <td>{{ ExerciceData.id }}</td>
-          <td>{{ ExerciceData.DescriptifData }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<hr style="width : 800px; margin-left : 0px">

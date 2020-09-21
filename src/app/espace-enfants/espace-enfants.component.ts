@@ -4,6 +4,7 @@ import { EspaceEnfantService } from './espace-enfant.service';
 import { AppComponent } from './../app.component';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-espace-enfants',
@@ -23,7 +24,8 @@ export class EspaceEnfantsComponent implements OnInit {
     private appComponent: AppComponent,
     private enfant: EspaceEnfantService,
     private Toast: ToastrService,
-    private paiementParent: InscriptionParentsService
+    private paiementParent: InscriptionParentsService,
+    private router: Router
   ) {
     this.appComponent.menuVisible = false;
   }
@@ -84,6 +86,7 @@ export class EspaceEnfantsComponent implements OnInit {
                           timeOut: 3000,
                           positionClass: 'toast-top-center',
                         });
+                        this.router.navigate(['exemple_matrice']);
                       } else {
                         this.Toast.error('Mot de passe invalide', '', {
                           timeOut: 3000,

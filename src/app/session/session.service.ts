@@ -60,4 +60,24 @@ export class SessionService {
         })
       );
   }
+
+  getSessionExercice(sessionId) {
+    return this.http
+      .get(`${environment.apiUrl}/getSessionExercices/` + sessionId)
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
+
+  createSessionExercice(enreg) {
+    return this.http
+      .post(`${environment.apiUrl}/createSessionExercice`, enreg)
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
 }
