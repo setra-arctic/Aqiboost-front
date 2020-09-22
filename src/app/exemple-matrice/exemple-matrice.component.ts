@@ -1,7 +1,7 @@
 import { PopupDataExerciceService } from './../liste-exercices/fiche-exercice/popup-data-exercice/popup-data-exercice.service';
 import { ExempleMatriceService } from './exemple-matrice.service';
 import { ListeExercicesService } from './../liste-exercices/liste-exercices.service';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Inject, Component, ElementRef, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Uuid } from 'aws-sdk/clients/groundstation';
 
@@ -37,7 +37,7 @@ export class ExempleMatriceComponent implements OnInit {
     private BaseExercice: ListeExercicesService,
     private ExerciceData: ExempleMatriceService,
     private dataAudio: PopupDataExerciceService,
-    private renderer: Renderer2
+    @Inject(ElementRef) private element: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -55,13 +55,15 @@ export class ExempleMatriceComponent implements OnInit {
       }
     );
 
-    this.listKey.push({
-      key: '',
-      shiftKey: false,
-      greenStatus: false,
-      redStatus: false,
-      disabled: true,
-    });
+    for (let i = 0; i < 50; i++) {
+      this.listKey.push({
+        key: '',
+        shiftKey: false,
+        greenStatus: false,
+        redStatus: false,
+        disabled: true,
+      });
+    }
 
     this.ExerciceData.getKey().subscribe((res) => {
       // console.log(res);
@@ -135,77 +137,95 @@ export class ExempleMatriceComponent implements OnInit {
   }
 
   // --------------------------------keyBoard-----------------------------
-  keyPress(keyPressed) {
+  keyPress(keyPressed, click) {
+    console.log(click);
     let i = 0;
     let keyExist = false;
-    let indiceCaractValide = -1;
-
-    if (keyPressed.key == 'Shift') {
-      for (i = 2; i <= 48; i++) {
-        keyExist = false;
-        this.tempListKey.forEach((element) => {
-          if (element.key == this.listKey[i].key) {
-            keyExist = true;
-          }
-        });
-
-        if (!keyExist) {
-          this.tempListKey.push({
-            key: this.listKey[i].key,
-            shiftKey: false,
-            greenStatus: false,
-            redStatus: false,
-            disabled: false,
-          });
-        }
-
-        this.listKey[i].key = this.listKey[i + 48].key;
-      }
-    }
-
-    // Chercher l'indice du caractère valide
-    i = -1;
-    this.listKey.forEach((element) => {
-      i++;
-      if (
-        element.key == this.listCaract[this.listCaractSaisie.length].caract ||
-        element.key == this.listCaract[this.listCaractSaisie.length].otherCaract
-      ) {
-        indiceCaractValide = i;
-      }
-    });
-
-    this.listKey.forEach((element) => {
-      if (element.key == keyPressed.key) {
-        // console.log(
-        //   keyPressed.key,
-        //   this.listCaract[this.listCaractSaisie.length]
-        // );
-        if (
-          keyPressed.key ==
-            this.listCaract[this.listCaractSaisie.length].caract ||
-          keyPressed.key ==
-            this.listCaract[this.listCaractSaisie.length].otherCaract
-        ) {
-          element.greenStatus = true;
-          this.listCaractSaisie.push(keyPressed.key);
-          this.texteSaisie += keyPressed.key;
-          this.FormExempleMatrice.patchValue({
-            saisie: this.texteSaisie,
-          });
-        } else {
-          element.redStatus = true;
-          if (element.key != 'Shift') {
-            this.nbFautes++;
-          }
-        }
-      }
-    });
-
-    if (this.nbFautes == 2) {
-      this.keyboardStatus(false);
-      if (indiceCaractValide > -1) {
-        if (this.listKey[indiceCaractValide].shiftKey == true) {
+    if (click) {
+      // this.listKey.forEach((element) => {
+      //   element.greenStatus = false;
+      //   element.redStatus = false;
+      // });
+      // if (!this.keyboardOff) {
+      //   if (keyPressed == 'Shift') {
+      //     // Afficher les caractères correspondants lorsque Shift est maintenu
+      //     console.log(this.listKey[49].greenStatus);
+      //     switch (this.listKey[49].greenStatus) {
+      //       case true:
+      //         this.listKey[49].greenStatus = false;
+      //         if (this.tempListKey.length > 0) {
+      //           for (i = 2; i <= 48; i++) {
+      //             this.listKey[i].key = this.tempListKey[i - 2].key;
+      //           }
+      //         }
+      //         break;
+      //       case false:
+      //         this.listKey[49].greenStatus = true;
+      //         for (i = 2; i <= 48; i++) {
+      //           if (this.listKey[i].key == 'Shift') {
+      //           }
+      //           keyExist = false;
+      //           this.tempListKey.forEach((element) => {
+      //             if (element.key == this.listKey[i].key) {
+      //               keyExist = true;
+      //             }
+      //           });
+      //           if (!keyExist) {
+      //             this.tempListKey.push({
+      //               key: this.listKey[i].key,
+      //               shiftKey: false,
+      //               greenStatus: false,
+      //               redStatus: false,
+      //               disabled: false,
+      //             });
+      //           }
+      //           this.listKey[i].key = this.listKey[i + 48].key;
+      //         }
+      //     }
+      //   }
+      //   // Détecter la touche enfoncée et tester si valide
+      //   this.listKey.forEach((element) => {
+      //     if (element.key == keyPressed) {
+      //       if (
+      //         keyPressed ==
+      //           this.listCaract[this.listCaractSaisie.length].caract ||
+      //         keyPressed ==
+      //           this.listCaract[this.listCaractSaisie.length].otherCaract
+      //       ) {
+      //         this.nbFautes = 0;
+      //         element.greenStatus = true;
+      //         this.listCaractSaisie.push(keyPressed);
+      //         this.texteSaisie += keyPressed;
+      //         this.FormExempleMatrice.patchValue({
+      //           saisie: this.texteSaisie,
+      //         });
+      //       } else {
+      //         if (keyPressed != 'Shift') {
+      //           element.redStatus = true;
+      //           this.nbFautes++;
+      //           if (this.nbFautes == 2) {
+      //             this.lockKeyboard();
+      //           }
+      //           console.log(
+      //             'element.key : ' + element.key,
+      //             'keyPressed.key : ' + keyPressed,
+      //             'this.listCaract[this.listCaractSaisie.length].caract : ' +
+      //               this.listCaract[this.listCaractSaisie.length].caract,
+      //             'this.nbFautes : ' + this.nbFautes
+      //           );
+      //         }
+      //       }
+      //     }
+      //   });
+      //   // La chaîne " ¨ " n'est pas renvoyée par (keydown)
+      //   if (keyPressed == 'Dead') {
+      //     this.listKey[24].redStatus = true;
+      //   }
+      // }
+    } else {
+      if (!this.keyboardOff) {
+        if (keyPressed.key == 'Shift') {
+          // Afficher les caractères correspondants lorsque Shift est maintenu
           for (i = 2; i <= 48; i++) {
             keyExist = false;
             this.tempListKey.forEach((element) => {
@@ -227,12 +247,44 @@ export class ExempleMatriceComponent implements OnInit {
             this.listKey[i].key = this.listKey[i + 48].key;
           }
         }
-        this.listKey[indiceCaractValide].greenStatus = true;
-      }
-    }
 
-    if (keyPressed.key == 'Dead') {
-      this.listKey[24].redStatus = true;
+        // Détecter la touche enfoncée et tester si valide
+        this.listKey.forEach((element) => {
+          if (element.key == keyPressed.key) {
+            if (
+              keyPressed.key ==
+                this.listCaract[this.listCaractSaisie.length].caract ||
+              keyPressed.key ==
+                this.listCaract[this.listCaractSaisie.length].otherCaract
+            ) {
+              this.nbFautes = 0;
+              element.greenStatus = true;
+              this.listCaractSaisie.push(keyPressed.key);
+              this.texteSaisie += keyPressed.key;
+              this.FormExempleMatrice.patchValue({
+                saisie: this.texteSaisie,
+              });
+            } else {
+              if (keyPressed.key != 'Shift') {
+                element.redStatus = true;
+                this.nbFautes++;
+                console.log(
+                  'element.key : ' + element.key,
+                  'keyPressed.key : ' + keyPressed.key,
+                  'this.listCaract[this.listCaractSaisie.length].caract : ' +
+                    this.listCaract[this.listCaractSaisie.length].caract,
+                  'this.nbFautes : ' + this.nbFautes
+                );
+              }
+            }
+          }
+        });
+
+        // La chaîne " ¨ " n'est pas renvoyée par (keydown)
+        if (keyPressed.key == 'Dead') {
+          this.listKey[24].redStatus = true;
+        }
+      }
     }
     // if (!keyExist) {
     //   this.listKey.push({
@@ -247,23 +299,78 @@ export class ExempleMatriceComponent implements OnInit {
 
   keyDown(keyPressed) {
     let i = 0;
-    if (keyPressed.key == 'Shift') {
-      if (this.tempListKey.length > 0) {
-        for (i = 2; i <= 48; i++) {
-          this.listKey[i].key = this.tempListKey[i - 2].key;
+
+    if (!keyPressed.key) {
+    } else {
+      if (!this.keyboardOff) {
+        if (keyPressed.key == 'Shift') {
+          if (this.tempListKey.length > 0) {
+            for (i = 2; i <= 48; i++) {
+              this.listKey[i].key = this.tempListKey[i - 2].key;
+            }
+          }
+        }
+
+        if (this.nbFautes == 2) {
+          this.lockKeyboard();
+        }
+
+        this.listKey.forEach((element) => {
+          if (element.key == keyPressed.key && this.nbFautes < 2) {
+            element.greenStatus = false;
+            element.redStatus = false;
+          }
+        });
+
+        if (keyPressed.key == 'Dead') {
+          this.listKey[24].redStatus = false;
         }
       }
     }
+  }
 
+  lockKeyboard() {
+    let keyExist = false;
+    let indiceCaractValide = -1;
+    this.nbFautes = 0;
+    // Chercher l'indice du caractère valide
+    let i = -1;
     this.listKey.forEach((element) => {
-      if (element.key == keyPressed.key && this.nbFautes < 2) {
-        element.greenStatus = false;
-        element.redStatus = false;
+      i++;
+      if (
+        element.key == this.listCaract[this.listCaractSaisie.length].caract ||
+        element.key == this.listCaract[this.listCaractSaisie.length].otherCaract
+      ) {
+        indiceCaractValide = i;
       }
     });
 
-    if (keyPressed.key == 'Dead') {
-      this.listKey[24].redStatus = false;
+    this.keyboardStatus(false);
+    if (indiceCaractValide > -1) {
+      if (this.listKey[indiceCaractValide].shiftKey == true) {
+        for (i = 2; i <= 48; i++) {
+          keyExist = false;
+          this.tempListKey.forEach((element) => {
+            if (element.key == this.listKey[i].key) {
+              keyExist = true;
+            }
+          });
+
+          if (!keyExist) {
+            this.tempListKey.push({
+              key: this.listKey[i].key,
+              shiftKey: false,
+              greenStatus: false,
+              redStatus: false,
+              disabled: false,
+            });
+          }
+
+          this.listKey[i].key = this.listKey[i + 48].key;
+        }
+        indiceCaractValide -= 48;
+      }
+      this.listKey[indiceCaractValide].greenStatus = true;
     }
   }
 
@@ -277,11 +384,14 @@ export class ExempleMatriceComponent implements OnInit {
   }
 
   keyboardStatus(status) {
+    console.log('keyboardStatus');
+    let i = 0;
     switch (status) {
       case true:
         this.lockImage = 'Cadena déverouillé.png';
         this.keyboardOff = false;
         this.nbFautes = 0;
+        this.audioOK = false;
         break;
       case false:
         this.lockImage = 'Cadena verouillé.png';
@@ -293,5 +403,10 @@ export class ExempleMatriceComponent implements OnInit {
       element.redStatus = false;
       element.greenStatus = false;
     });
+    if (this.tempListKey.length > 0) {
+      for (i = 2; i <= 48; i++) {
+        this.listKey[i].key = this.tempListKey[i - 2].key;
+      }
+    }
   }
 }
