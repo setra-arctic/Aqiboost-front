@@ -34,7 +34,7 @@
           "configurations": {
             "production": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
+                "replace": "src/environments/environment_aqiboost.ts",
                 "with": "src/environments/environment.prod.ts"
               }],
               "optimization": true,
