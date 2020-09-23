@@ -143,86 +143,86 @@ export class ExempleMatriceComponent implements OnInit {
     let keyExist = false;
 
     if (click) {
-      this.listKey.forEach((element) => {
-        if (element.key != 'Shift') {
-          element.greenStatus = false;
-          element.redStatus = false;
-        }
-      });
-      if (!this.keyboardOff) {
-        if (keyPressed == 'Shift') {
-          // Afficher les caractères correspondants lorsque Shift est maintenu
-          console.log(this.listKey[49].greenStatus);
-          switch (this.listKey[49].greenStatus) {
-            case true:
-              this.listKey[49].greenStatus = false;
-              if (this.tempListKey.length > 0) {
-                for (i = 2; i <= 48; i++) {
-                  this.listKey[i].key = this.tempListKey[i - 2].key;
-                }
-              }
-              break;
-            case false:
-              this.listKey[49].greenStatus = true;
-              for (i = 2; i <= 48; i++) {
-                keyExist = false;
-                this.tempListKey.forEach((element) => {
-                  if (element.key == this.listKey[i].key) {
-                    keyExist = true;
-                  }
-                });
-                if (!keyExist) {
-                  this.tempListKey.push({
-                    key: this.listKey[i].key,
-                    shiftKey: false,
-                    greenStatus: false,
-                    redStatus: false,
-                    disabled: false,
-                  });
-                }
-                this.listKey[i].key = this.listKey[i + 48].key;
-              }
-          }
-        }
-        // Détecter la touche enfoncée et tester si valide
-        this.listKey.forEach((element) => {
-          if (element.key == keyPressed) {
-            if (
-              keyPressed ==
-                this.listCaract[this.listCaractSaisie.length].caract ||
-              keyPressed ==
-                this.listCaract[this.listCaractSaisie.length].otherCaract
-            ) {
-              this.nbFautes = 0;
-              element.greenStatus = true;
-              this.listCaractSaisie.push(keyPressed);
-              this.texteSaisie += keyPressed;
-              this.FormExempleMatrice.patchValue({
-                saisie: this.texteSaisie,
-              });
-            } else {
-              if (keyPressed != 'Shift') {
-                element.redStatus = true;
-                this.nbFautes++;
-                if (this.nbFautes == 2) {
-                  this.lockKeyboard();
-                }
-                console.log(
-                  'element.key : ' + element.key,
-                  'keyPressed.key : ' + keyPressed,
-                  'this.listCaract[this.listCaractSaisie.length].caract : ' +
-                    this.listCaract[this.listCaractSaisie.length].caract,
-                  'this.nbFautes : ' + this.nbFautes
-                );
-              }
-            }
-          }
-        });
-        // La chaîne " ¨ " n'est pas renvoyée par (keydown)
-        if (keyPressed == 'Dead') {
-          this.listKey[24].redStatus = true;
-        }
-      }
+      // this.listKey.forEach((element) => {
+      //   if (element.key != 'Shift') {
+      //     element.greenStatus = false;
+      //     element.redStatus = false;
+      //   }
+      // });
+      // if (!this.keyboardOff) {
+      //   if (keyPressed == 'Shift') {
+      //     // Afficher les caractères correspondants lorsque Shift est maintenu
+      //     console.log(this.listKey[49].greenStatus);
+      //     switch (this.listKey[49].greenStatus) {
+      //       case true:
+      //         this.listKey[49].greenStatus = false;
+      //         if (this.tempListKey.length > 0) {
+      //           for (i = 2; i <= 48; i++) {
+      //             this.listKey[i].key = this.tempListKey[i - 2].key;
+      //           }
+      //         }
+      //         break;
+      //       case false:
+      //         this.listKey[49].greenStatus = true;
+      //         for (i = 2; i <= 48; i++) {
+      //           keyExist = false;
+      //           this.tempListKey.forEach((element) => {
+      //             if (element.key == this.listKey[i].key) {
+      //               keyExist = true;
+      //             }
+      //           });
+      //           if (!keyExist) {
+      //             this.tempListKey.push({
+      //               key: this.listKey[i].key,
+      //               shiftKey: false,
+      //               greenStatus: false,
+      //               redStatus: false,
+      //               disabled: false,
+      //             });
+      //           }
+      //           this.listKey[i].key = this.listKey[i + 48].key;
+      //         }
+      //     }
+      //   }
+      //   // Détecter la touche enfoncée et tester si valide
+      //   this.listKey.forEach((element) => {
+      //     if (element.key == keyPressed) {
+      //       if (
+      //         keyPressed ==
+      //           this.listCaract[this.listCaractSaisie.length].caract ||
+      //         keyPressed ==
+      //           this.listCaract[this.listCaractSaisie.length].otherCaract
+      //       ) {
+      //         this.nbFautes = 0;
+      //         element.greenStatus = true;
+      //         this.listCaractSaisie.push(keyPressed);
+      //         this.texteSaisie += keyPressed;
+      //         this.FormExempleMatrice.patchValue({
+      //           saisie: this.texteSaisie,
+      //         });
+      //       } else {
+      //         if (keyPressed != 'Shift') {
+      //           element.redStatus = true;
+      //           this.nbFautes++;
+      //           if (this.nbFautes == 2) {
+      //             this.lockKeyboard();
+      //           }
+      //           console.log(
+      //             'element.key : ' + element.key,
+      //             'keyPressed.key : ' + keyPressed,
+      //             'this.listCaract[this.listCaractSaisie.length].caract : ' +
+      //               this.listCaract[this.listCaractSaisie.length].caract,
+      //             'this.nbFautes : ' + this.nbFautes
+      //           );
+      //         }
+      //       }
+      //     }
+      //   });
+      //   // La chaîne " ¨ " n'est pas renvoyée par (keydown)
+      //   if (keyPressed == 'Dead') {
+      //     this.listKey[24].redStatus = true;
+      //   }
+      // }
     } else {
       if (!this.keyboardOff) {
         if (keyPressed.key == 'Shift') {

@@ -107,6 +107,7 @@
                     red: listKey[1].redStatus
                   }"
                   [disabled]="listKey[1].disabled"
+                  #btn1
                 >
                   {{ listKey[1].key }}
                 </button>
@@ -742,7 +743,6 @@
                 }"
                 [disabled]="listKey[49].disabled"
                 (click)="keyPress(listKey[49].key, true)"
-                #btn1
               >
                 {{ listKey[49].key }}
               </button>
