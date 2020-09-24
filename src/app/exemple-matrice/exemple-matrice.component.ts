@@ -4,6 +4,7 @@ import { ListeExercicesService } from './../liste-exercices/liste-exercices.serv
 import { Inject, Component, ElementRef, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Uuid } from 'aws-sdk/clients/groundstation';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 @Component({
   selector: 'app-exemple-matrice',
@@ -256,7 +257,7 @@ export class ExempleMatriceComponent implements OnInit {
         i = -1;
         this.listKey.forEach((element) => {
           i++;
-          if (element.key == keyPressed.key) {
+          if (element.key == keyPressed.key && element.state == true) {
             if (
               keyPressed.key ==
                 this.listCaract[this.listCaractSaisie.length].caract ||
@@ -264,21 +265,31 @@ export class ExempleMatriceComponent implements OnInit {
                 this.listCaract[this.listCaractSaisie.length].otherCaract
             ) {
               this.indiceCaractValide = i;
-              this.nbFautes = 0;
-              element.greenStatus = true;
-              this.listCaractSaisie.push(keyPressed.key);
-              this.texteSaisie += keyPressed.key;
-              this.FormExempleMatrice.patchValue({
-                saisie: this.texteSaisie,
-              });
+              // this.nbFautes = 0;
+              // element.greenStatus = true;
+              // this.listCaractSaisie.push(keyPressed.key);
+              // this.texteSaisie += keyPressed.key;
+              // this.FormExempleMatrice.patchValue({
+              //   saisie: this.texteSaisie,
+              // });
             } else {
-              if (keyPressed.key != 'Shift') {
+              if (element.state == true) {
                 element.redStatus = true;
                 this.nbFautes++;
               }
             }
           }
         });
+
+        if (this.indiceCaractValide > -1) {
+          this.nbFautes = 0;
+          this.listKey[this.indiceCaractValide].greenStatus = true;
+          this.listCaractSaisie.push(this.listKey[this.indiceCaractValide].key);
+          this.texteSaisie += this.listKey[this.indiceCaractValide].key;
+          this.FormExempleMatrice.patchValue({
+            saisie: this.texteSaisie,
+          });
+        }
       }
     }
   }
@@ -299,21 +310,27 @@ export class ExempleMatriceComponent implements OnInit {
 
         if (this.nbFautes > 0) {
           this.lockKeyboard();
+        } else {
+          if (this.indiceCaractValide > -1) {
+            if (this.listKey[this.indiceCaractValide].state == true) {
+              this.listKey[this.indiceCaractValide].greenStatus = false;
+            }
+          }
         }
 
-        this.listKey.forEach((element) => {
-          if (element.key == keyPressed.key && this.nbFautes == 0) {
-            element.greenStatus = false;
-            element.redStatus = false;
-          }
-        });
+        // this.listKey.forEach((element) => {
+        //   if (element.key == keyPressed.key && this.nbFautes == 0) {
+        //     element.greenStatus = false;
+        //     element.redStatus = false;
+        //   }
+        // });
       }
     }
   }
 
   lockKeyboard() {
     let keyExist = false;
-    let i = 0;
+    let i = -1;
     this.keyboardOff = true;
 
     this.listKey.forEach((element) => {
@@ -327,38 +344,39 @@ export class ExempleMatriceComponent implements OnInit {
     });
 
     this.keyboardStatus(false);
-    if (this.indiceCaractValide > -1) {
-      if (this.listKey[this.indiceCaractValide].shiftKey == true) {
-        for (i = 0; i <= 48; i++) {
-          keyExist = false;
-          this.tempListKey.forEach((element) => {
-            if (element.key == this.listKey[i].key) {
-              keyExist = true;
-            }
-          });
-
-          if (!keyExist) {
-            this.tempListKey.push({
-              key: this.listKey[i].key,
-              shiftKey: false,
-              greenStatus: false,
-              redStatus: false,
-              disabled: false,
+    if (this.nbFautes == 2) {
+      if (this.indiceCaractValide > -1) {
+        if (this.listKey[this.indiceCaractValide].shiftKey == true) {
+          for (i = 0; i <= 48; i++) {
+            keyExist = false;
+            this.tempListKey.forEach((element) => {
+              if (element.key == this.listKey[i].key) {
+                keyExist = true;
+              }
             });
-          }
 
-          if (i > 0) {
-            this.listKey[i].key = this.listKey[i + 49].key;
+            if (!keyExist) {
+              this.tempListKey.push({
+                key: this.listKey[i].key,
+                shiftKey: false,
+                greenStatus: false,
+                redStatus: false,
+                disabled: false,
+              });
+            }
+
+            if (i > 0) {
+              this.listKey[i].key = this.listKey[i + 49].key;
+            }
           }
+          this.indiceCaractValide -= 49;
         }
-        this.indiceCaractValide -= 49;
-      }
 
-      if (this.nbFautes == 2) {
         this.listKey.forEach((element) => {
           element.redStatus = false;
         });
         this.listKey[this.indiceCaractValide].greenStatus = true;
+        this.nbFautes = 0;
       }
     }
   }

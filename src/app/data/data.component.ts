@@ -196,6 +196,7 @@ export class DataComponent implements OnInit {
           this.url_fichier = result.body.imageUrl;
           this.nom_fichier = result.body.nomOrigine;
         }
+        console.log(this.url_fichier);
       });
     }
   }
