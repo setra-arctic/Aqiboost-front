@@ -233,9 +233,8 @@
                     <input type="checkbox" [disabled]="disabled" [checked]="abonnementEnfant(Enfant.id)" />
                   </td>
                   <td style="width: 100px">
-                    <button class="btn btn-primary btn-sm mr-2" style="width: 50px">
-                      <img src="../../assets/images/editer.png" placement="right" ngbTooltip="Modifier ou supprimer"
-                        (click)="afficherEnfant(Enfant.id)" />
+                    <button class="btn btn-primary btn-sm mr-2" style="width: 50px" (click)="afficherEnfant(Enfant.id)">
+                      <img src="../../assets/images/editer.png" placement="right" ngbTooltip="Modifier ou supprimer" />
                     </button>
                   </td>
                 </tr>

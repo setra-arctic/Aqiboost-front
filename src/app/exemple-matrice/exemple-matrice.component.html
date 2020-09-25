@@ -1,366 +1,398 @@
-<form [formGroup]="FormExempleMatrice" (keydown)="keyPress($event, false)" (keyup)="keyDown($event)">
-  <div class="row justify-content-center">
-    <div class="card mt-4" style="min-height: 50px; width: 550px">
-      <div class="card-header">Liste des bases d'exercice</div>
-      <div>
-        <table class="table table-hover">
-          <thead>
-            <th style="width: 50px">Numero</th>
-            <th>Titre</th>
-            <th>Descriptif</th>
-          </thead>
-
-          <tbody>
-            <tr *ngFor="let BaseExercice of base_exercice" (click)="click_tr(BaseExercice.id)"
-              [ngClass]="{ 'table-active': BaseExercice.id == idBaseExercice }">
-              <td>{{ BaseExercice.NumeroExercice }}</td>
-              <td>{{ BaseExercice.Titre }}</td>
-              <td>{{ BaseExercice.DescriptifExercice }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card mt-4" style="min-height: 50px; width: 550px; margin-left: 10px">
-      <div class="card-header">Contenu audio d'une base d'exercice</div>
-      <div>
-        <table class="table table-hover" style="height: auto">
-          <thead>
-            <th style="width: 50px">id</th>
-            <th>Descriptif</th>
-          </thead>
-
-          <tbody>
-            <tr *ngFor="let ExerciceData of exercice_data" (click)="selectExerciceData(ExerciceData.id)"
-              [ngClass]="{ 'table-active': ExerciceData.id == idExerciceData }">
-              <td>{{ ExerciceData.id }}</td>
-              <td>{{ ExerciceData.DescriptifData }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <hr style="margin-left: 0px" />
-
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Dictée de phrase</h5>
-      <div style="margin-top: 10px">
-        <button class="btn btn-primary btn-sm" [disabled]="!audioOK"
-          style="width: 200px; font-size: medium; height: 35px" (click)="keyboardStatus(true)" (click)="btn1.focus()">
-          Commencer la dictée
-        </button>
-        <div style="margin-top: 10px">
-          <audio id="audioPlayback" controls preload="auto" [src]="url_fichier"></audio>
+<div class="row justify-content-center">
+  <form>
+    <fieldset *ngIf="numPage == 0">
+      <label>{{txtBienvenue}}</label>
+      <div class="container mt-4" style="margin-top: 10px;">
+        <div class="btn-group" role="group" aria-label="Basic example" style="width:1200px">
+          <button type="button" class="btn btn-secondary" (click)="listerExercice()">Mes activités</button>
+          <button type="button" class="btn btn-secondary">Mon coffre</button>
+          <button type="button" class="btn btn-secondary">Mes scores</button>
+          <button type="button" class="btn btn-secondary">Défis</button>
+          <button type="button" class="btn btn-secondary">MarketPlay</button>
+          <button type="button" class="btn btn-secondary">Labo</button>
+          <button type="button" class="btn btn-secondary" (click)="Deconnexion()">Déconnexion</button>
         </div>
       </div>
-      <textarea type="text" class="form-control" id="title" formControlName="saisie" disabled
-        style="margin-top: 10px"></textarea>
+    </fieldset>
+    <fieldset *ngIf="numPage == 1">
+      <div class="row justify-content-center">
+        <div class="card mt-4" style="min-height: 50px; width: 700px">
+          <div class="card-header">Liste des exercices</div>
+          <div>
+            <table class="table table-hover" style="width:700px">
+              <thead>
+                <th style="width: 50px">Numero</th>
+                <th>Titre</th>
+                <th>Descriptif</th>
+                <th></th>
+              </thead>
 
-      <div class="special-div">
-        <div class="row justify-content-center">
-          <div style="margin-top: 20px">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-              <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-secondary" (click)="keyPress(listKey[1].key, true)" [ngClass]="{
-                    green: listKey[1].greenStatus,
-                    red: listKey[1].redStatus
-                  }" [disabled]="listKey[1].disabled" #btn1>
-                  {{ listKey[1].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[2].greenStatus,
-                    red: listKey[2].redStatus
-                  }" [disabled]="listKey[2].disabled" (click)="keyPress(listKey[2].key, true)">
-                  {{ listKey[2].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[3].greenStatus,
-                    red: listKey[3].redStatus
-                  }" [disabled]="listKey[3].disabled" (click)="keyPress(listKey[3].key, true)">
-                  {{ listKey[3].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[4].greenStatus,
-                    red: listKey[4].redStatus
-                  }" [disabled]="listKey[4].disabled" (click)="keyPress(listKey[4].key, true)">
-                  {{ listKey[4].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[5].greenStatus,
-                    red: listKey[5].redStatus
-                  }" [disabled]="listKey[5].disabled" (click)="keyPress(listKey[5].key, true)">
-                  {{ listKey[5].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[6].greenStatus,
-                    red: listKey[6].redStatus
-                  }" [disabled]="listKey[6].disabled" (click)="keyPress(listKey[6].key, true)">
-                  {{ listKey[6].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[7].greenStatus,
-                    red: listKey[7].redStatus
-                  }" [disabled]="listKey[7].disabled" (click)="keyPress(listKey[7].key, true)">
-                  {{ listKey[7].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[8].greenStatus,
-                    red: listKey[8].redStatus
-                  }" [disabled]="listKey[8].disabled" (click)="keyPress(listKey[8].key, true)">
-                  {{ listKey[8].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[9].greenStatus,
-                    red: listKey[9].redStatus
-                  }" [disabled]="listKey[9].disabled" (click)="keyPress(listKey[9].key, true)">
-                  {{ listKey[9].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[10].greenStatus,
-                    red: listKey[10].redStatus
-                  }" [disabled]="listKey[10].disabled" (click)="keyPress(listKey[10].key, true)">
-                  {{ listKey[10].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[11].greenStatus,
-                    red: listKey[11].redStatus
-                  }" [disabled]="listKey[11].disabled" (click)="keyPress(listKey[11].key, true)">
-                  {{ listKey[11].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[12].greenStatus,
-                    red: listKey[12].redStatus
-                  }" [disabled]="listKey[12].disabled" (click)="keyPress(listKey[12].key, true)">
-                  {{ listKey[12].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[13].greenStatus,
-                    red: listKey[13].redStatus
-                  }" [disabled]="listKey[13].disabled" (click)="keyPress(listKey[13].key, true)">
-                  {{ listKey[13].key }}
-                </button>
+              <tbody>
+                <tr *ngFor="let BaseExercice of base_exercice" (click)="click_tr(BaseExercice.id)"
+                  [ngClass]="{ 'table-active': BaseExercice.id == idBaseExercice }">
+                  <td>{{ BaseExercice.NumeroExercice }}</td>
+                  <td>{{ BaseExercice.Titre }}</td>
+                  <td style="width:300px">{{ BaseExercice.DescriptifExercice }}</td>
+                  <td>
+                    <button class="btn btn-primary btn-sm mr-2" style="width: 200px; height:30px;font-size: medium;"
+                      (click)="goToExercice(BaseExercice.id)">
+                      Accéder à l'exercice
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- <div class="card mt-4" style="min-height: 50px; width: 550px; margin-left: 10px">
+        <div class="card-header">Contenu audio d'une base d'exercice</div>
+        <div>
+          <table class="table table-hover" style="height: auto">
+            <thead>
+              <th style="width: 50px">id</th>
+              <th>Descriptif</th>
+            </thead>
+  
+            <tbody>
+              <tr *ngFor="let ExerciceData of exercice_data" (mousedown)="selectExerciceData(ExerciceData.id)"
+                [ngClass]="{ 'table-active': ExerciceData.id == idExerciceData }">
+                <td>{{ ExerciceData.id }}</td>
+                <td>{{ ExerciceData.DescriptifData }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>-->
+      </div>
+    </fieldset>
+  </form>
+  <form [formGroup]="FormExempleMatrice" (keydown)="keyPress($event, false)" (keyup)="keyDown($event)">
+    <fieldset *ngIf="numPage == 2">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Dictée de phrase</h5>
+          <div style="margin-top: 10px">
+            <button class="btn btn-primary btn-sm" [disabled]="!audioOK"
+              style="width: 200px; font-size: medium; height: 35px" (click)="debutExercice()" (click)="btn1.focus()">
+              Commencer la dictée
+            </button>
+            <div style="margin-top: 10px">
+              <audio id="audioPlayback" controls preload="auto" [src]="url_fichier"></audio>
+            </div>
+          </div>
+          <textarea type="text" class="form-control" id="title" formControlName="saisie" disabled
+            style="margin-top: 10px"></textarea>
+
+          <div class="special-div">
+            <div class="row justify-content-center">
+              <div style="margin-top: 20px">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                  <div class="btn-group mr-2" role="group" aria-label="First group">
+                    <button type="button" class="btn btn-secondary" (mousedown)="keyPress(listKey[1].key, true)"
+                      [ngClass]="{
+                        green: listKey[1].greenStatus,
+                        red: listKey[1].redStatus
+                      }" [disabled]="listKey[1].disabled" #btn1>
+                      {{ listKey[1].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[2].greenStatus,
+                        red: listKey[2].redStatus
+                      }" [disabled]="listKey[2].disabled" (mousedown)="keyPress(listKey[2].key, true)">
+                      {{ listKey[2].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[3].greenStatus,
+                        red: listKey[3].redStatus
+                      }" [disabled]="listKey[3].disabled" (mousedown)="keyPress(listKey[3].key, true)">
+                      {{ listKey[3].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[4].greenStatus,
+                        red: listKey[4].redStatus
+                      }" [disabled]="listKey[4].disabled" (mousedown)="keyPress(listKey[4].key, true)">
+                      {{ listKey[4].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[5].greenStatus,
+                        red: listKey[5].redStatus
+                      }" [disabled]="listKey[5].disabled" (mousedown)="keyPress(listKey[5].key, true)">
+                      {{ listKey[5].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[6].greenStatus,
+                        red: listKey[6].redStatus
+                      }" [disabled]="listKey[6].disabled" (mousedown)="keyPress(listKey[6].key, true)">
+                      {{ listKey[6].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[7].greenStatus,
+                        red: listKey[7].redStatus
+                      }" [disabled]="listKey[7].disabled" (mousedown)="keyPress(listKey[7].key, true)">
+                      {{ listKey[7].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[8].greenStatus,
+                        red: listKey[8].redStatus
+                      }" [disabled]="listKey[8].disabled" (mousedown)="keyPress(listKey[8].key, true)">
+                      {{ listKey[8].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[9].greenStatus,
+                        red: listKey[9].redStatus
+                      }" [disabled]="listKey[9].disabled" (mousedown)="keyPress(listKey[9].key, true)">
+                      {{ listKey[9].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[10].greenStatus,
+                        red: listKey[10].redStatus
+                      }" [disabled]="listKey[10].disabled" (mousedown)="keyPress(listKey[10].key, true)">
+                      {{ listKey[10].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[11].greenStatus,
+                        red: listKey[11].redStatus
+                      }" [disabled]="listKey[11].disabled" (mousedown)="keyPress(listKey[11].key, true)">
+                      {{ listKey[11].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[12].greenStatus,
+                        red: listKey[12].redStatus
+                      }" [disabled]="listKey[12].disabled" (mousedown)="keyPress(listKey[12].key, true)">
+                      {{ listKey[12].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[13].greenStatus,
+                        red: listKey[13].redStatus
+                      }" [disabled]="listKey[13].disabled" (mousedown)="keyPress(listKey[13].key, true)">
+                      {{ listKey[13].key }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div style="margin-top: 5px">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                  <div class="btn-group mr-2" role="group" aria-label="First group">
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[14].greenStatus,
+                        red: listKey[14].redStatus
+                      }" [disabled]="listKey[14].disabled" (mousedown)="keyPress(listKey[14].key, true)">
+                      {{ listKey[14].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[15].greenStatus,
+                        red: listKey[15].redStatus
+                      }" [disabled]="listKey[15].disabled" (mousedown)="keyPress(listKey[15].key, true)">
+                      {{ listKey[15].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[16].greenStatus,
+                        red: listKey[16].redStatus
+                      }" [disabled]="listKey[16].disabled" (mousedown)="keyPress(listKey[16].key, true)">
+                      {{ listKey[16].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[17].greenStatus,
+                        red: listKey[17].redStatus
+                      }" [disabled]="listKey[17].disabled" (mousedown)="keyPress(listKey[17].key, true)">
+                      {{ listKey[17].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[18].greenStatus,
+                        red: listKey[18].redStatus
+                      }" [disabled]="listKey[18].disabled" (mousedown)="keyPress(listKey[18].key, true)">
+                      {{ listKey[18].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[19].greenStatus,
+                        red: listKey[19].redStatus
+                      }" [disabled]="listKey[19].disabled" (mousedown)="keyPress(listKey[19].key, true)">
+                      {{ listKey[19].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[20].greenStatus,
+                        red: listKey[20].redStatus
+                      }" [disabled]="listKey[20].disabled" (mousedown)="keyPress(listKey[20].key, true)">
+                      {{ listKey[20].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[21].greenStatus,
+                        red: listKey[21].redStatus
+                      }" [disabled]="listKey[21].disabled" (mousedown)="keyPress(listKey[21].key, true)">
+                      {{ listKey[21].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[22].greenStatus,
+                        red: listKey[22].redStatus
+                      }" [disabled]="listKey[22].disabled" (mousedown)="keyPress(listKey[22].key, true)">
+                      {{ listKey[22].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[23].greenStatus,
+                        red: listKey[23].redStatus
+                      }" [disabled]="listKey[23].disabled" (mousedown)="keyPress(listKey[23].key, true)">
+                      {{ listKey[23].key }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div style="margin-top: 5px">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                  <div class="btn-group mr-2" role="group" aria-label="First group">
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[26].greenStatus,
+                        red: listKey[26].redStatus
+                      }" [disabled]="listKey[26].disabled" (mousedown)="keyPress(listKey[26].key, true)">
+                      {{ listKey[26].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[27].greenStatus,
+                        red: listKey[27].redStatus
+                      }" [disabled]="listKey[27].disabled" (mousedown)="keyPress(listKey[27].key, true)">
+                      {{ listKey[27].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[28].greenStatus,
+                        red: listKey[28].redStatus
+                      }" [disabled]="listKey[28].disabled" (mousedown)="keyPress(listKey[28].key, true)">
+                      {{ listKey[28].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[29].greenStatus,
+                        red: listKey[29].redStatus
+                      }" [disabled]="listKey[29].disabled" (mousedown)="keyPress(listKey[29].key, true)">
+                      {{ listKey[29].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[30].greenStatus,
+                        red: listKey[30].redStatus
+                      }" [disabled]="listKey[30].disabled" (mousedown)="keyPress(listKey[30].key, true)">
+                      {{ listKey[30].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[31].greenStatus,
+                        red: listKey[31].redStatus
+                      }" [disabled]="listKey[31].disabled" (mousedown)="keyPress(listKey[31].key, true)">
+                      {{ listKey[31].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[32].greenStatus,
+                        red: listKey[32].redStatus
+                      }" [disabled]="listKey[32].disabled" (mousedown)="keyPress(listKey[32].key, true)">
+                      {{ listKey[32].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[33].greenStatus,
+                        red: listKey[33].redStatus
+                      }" [disabled]="listKey[33].disabled" (mousedown)="keyPress(listKey[33].key, true)">
+                      {{ listKey[33].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[34].greenStatus,
+                        red: listKey[34].redStatus
+                      }" [disabled]="listKey[34].disabled" (mousedown)="keyPress(listKey[34].key, true)">
+                      {{ listKey[34].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[35].greenStatus,
+                        red: listKey[35].redStatus
+                      }" [disabled]="listKey[35].disabled" (mousedown)="keyPress(listKey[35].key, true)">
+                      {{ listKey[35].key }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div style="margin-top: 5px">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                  <button type="button" class="btn btn-secondary" style="width: 120px"
+                    (mousedown)="keyPress(listKey[0].key, true)" [ngClass]="{
+                      green: listKey[0].greenStatus,
+                      red: listKey[0].redStatus
+                    }" [disabled]="listKey[0].disabled">
+                    {{ listKey[0].key }}
+                  </button>
+                  <div class="btn-group mr-2" role="group" aria-label="First group" style="margin-left: 8px">
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[39].greenStatus,
+                        red: listKey[39].redStatus
+                      }" [disabled]="listKey[39].disabled" (mousedown)="keyPress(listKey[39].key, true)">
+                      {{ listKey[39].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[40].greenStatus,
+                        red: listKey[40].redStatus
+                      }" [disabled]="listKey[40].disabled" (mousedown)="keyPress(listKey[40].key, true)">
+                      {{ listKey[40].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[41].greenStatus,
+                        red: listKey[41].redStatus
+                      }" [disabled]="listKey[41].disabled" (mousedown)="keyPress(listKey[41].key, true)">
+                      {{ listKey[41].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[42].greenStatus,
+                        red: listKey[42].redStatus
+                      }" [disabled]="listKey[42].disabled" (mousedown)="keyPress(listKey[42].key, true)">
+                      {{ listKey[42].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[43].greenStatus,
+                        red: listKey[43].redStatus
+                      }" [disabled]="listKey[43].disabled" (mousedown)="keyPress(listKey[43].key, true)">
+                      {{ listKey[43].key }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" [ngClass]="{
+                        green: listKey[44].greenStatus,
+                        red: listKey[44].redStatus
+                      }" [disabled]="listKey[44].disabled" (mousedown)="keyPress(listKey[44].key, true)">
+                      {{ listKey[44].key }}
+                    </button>
+                  </div>
+                  <button type="button" class="btn btn-secondary" style="width: 120px" [ngClass]="{
+                      green: listKey[0].greenStatus,
+                      red: listKey[0].redStatus
+                    }" [disabled]="listKey[0].disabled" (mousedown)="keyPress(listKey[0].key, true)">
+                    {{ listKey[0].key }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div style="margin-top: 5px">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                  <button type="button" class="btn btn-secondary" style="width: 360px" [ngClass]="{
+                      green: listKey[49].greenStatus,
+                      red: listKey[49].redStatus
+                    }" [disabled]="listKey[49].disabled" (mousedown)="keyPress(listKey[49].key, true)">
+                    {{ listKey[49].key }}
+                  </button>
+                  <button type="button" class="btn btn-light" style="margin-left: 5px"
+                    (mousedown)="keyboardStatus(keyboardOff)" (click)="btn1.focus()" *ngIf="cadenaVisible">
+                    <img src="../../assets/images/{{ lockImage }}" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="row justify-content-center">
-          <div style="margin-top: 5px">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-              <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[14].greenStatus,
-                    red: listKey[14].redStatus
-                  }" [disabled]="listKey[14].disabled" (click)="keyPress(listKey[14].key, true)">
-                  {{ listKey[14].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[15].greenStatus,
-                    red: listKey[15].redStatus
-                  }" [disabled]="listKey[15].disabled" (click)="keyPress(listKey[15].key, true)">
-                  {{ listKey[15].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[16].greenStatus,
-                    red: listKey[16].redStatus
-                  }" [disabled]="listKey[16].disabled" (click)="keyPress(listKey[16].key, true)">
-                  {{ listKey[16].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[17].greenStatus,
-                    red: listKey[17].redStatus
-                  }" [disabled]="listKey[17].disabled" (click)="keyPress(listKey[17].key, true)">
-                  {{ listKey[17].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[18].greenStatus,
-                    red: listKey[18].redStatus
-                  }" [disabled]="listKey[18].disabled" (click)="keyPress(listKey[18].key, true)">
-                  {{ listKey[18].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[19].greenStatus,
-                    red: listKey[19].redStatus
-                  }" [disabled]="listKey[19].disabled" (click)="keyPress(listKey[19].key, true)">
-                  {{ listKey[19].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[20].greenStatus,
-                    red: listKey[20].redStatus
-                  }" [disabled]="listKey[20].disabled" (click)="keyPress(listKey[20].key, true)">
-                  {{ listKey[20].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[21].greenStatus,
-                    red: listKey[21].redStatus
-                  }" [disabled]="listKey[21].disabled" (click)="keyPress(listKey[21].key, true)">
-                  {{ listKey[21].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[22].greenStatus,
-                    red: listKey[22].redStatus
-                  }" [disabled]="listKey[22].disabled" (click)="keyPress(listKey[22].key, true)">
-                  {{ listKey[22].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[23].greenStatus,
-                    red: listKey[23].redStatus
-                  }" [disabled]="listKey[23].disabled" (click)="keyPress(listKey[23].key, true)">
-                  {{ listKey[23].key }}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row justify-content-center">
-          <div style="margin-top: 5px">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-              <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[26].greenStatus,
-                    red: listKey[26].redStatus
-                  }" [disabled]="listKey[26].disabled" (click)="keyPress(listKey[26].key, true)">
-                  {{ listKey[26].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[27].greenStatus,
-                    red: listKey[27].redStatus
-                  }" [disabled]="listKey[27].disabled" (click)="keyPress(listKey[27].key, true)">
-                  {{ listKey[27].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[28].greenStatus,
-                    red: listKey[28].redStatus
-                  }" [disabled]="listKey[28].disabled" (click)="keyPress(listKey[28].key, true)">
-                  {{ listKey[28].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[29].greenStatus,
-                    red: listKey[29].redStatus
-                  }" [disabled]="listKey[29].disabled" (click)="keyPress(listKey[29].key, true)">
-                  {{ listKey[29].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[30].greenStatus,
-                    red: listKey[30].redStatus
-                  }" [disabled]="listKey[30].disabled" (click)="keyPress(listKey[30].key, true)">
-                  {{ listKey[30].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[31].greenStatus,
-                    red: listKey[31].redStatus
-                  }" [disabled]="listKey[31].disabled" (click)="keyPress(listKey[31].key, true)">
-                  {{ listKey[31].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[32].greenStatus,
-                    red: listKey[32].redStatus
-                  }" [disabled]="listKey[32].disabled" (click)="keyPress(listKey[32].key, true)">
-                  {{ listKey[32].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[33].greenStatus,
-                    red: listKey[33].redStatus
-                  }" [disabled]="listKey[33].disabled" (click)="keyPress(listKey[33].key, true)">
-                  {{ listKey[33].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[34].greenStatus,
-                    red: listKey[34].redStatus
-                  }" [disabled]="listKey[34].disabled" (click)="keyPress(listKey[34].key, true)">
-                  {{ listKey[34].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[35].greenStatus,
-                    red: listKey[35].redStatus
-                  }" [disabled]="listKey[35].disabled" (click)="keyPress(listKey[35].key, true)">
-                  {{ listKey[35].key }}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row justify-content-center">
-          <div style="margin-top: 5px">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-              <button type="button" class="btn btn-secondary" style="width: 120px"
-                (click)="keyPress(listKey[0].key, true)" [ngClass]="{
-                  green: listKey[0].greenStatus,
-                  red: listKey[0].redStatus
-                }" [disabled]="listKey[0].disabled">
-                {{ listKey[0].key }}
-              </button>
-              <div class="btn-group mr-2" role="group" aria-label="First group" style="margin-left: 8px">
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[39].greenStatus,
-                    red: listKey[39].redStatus
-                  }" [disabled]="listKey[39].disabled" (click)="keyPress(listKey[39].key, true)">
-                  {{ listKey[39].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[40].greenStatus,
-                    red: listKey[40].redStatus
-                  }" [disabled]="listKey[40].disabled" (click)="keyPress(listKey[40].key, true)">
-                  {{ listKey[40].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[41].greenStatus,
-                    red: listKey[41].redStatus
-                  }" [disabled]="listKey[41].disabled" (click)="keyPress(listKey[41].key, true)">
-                  {{ listKey[41].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[42].greenStatus,
-                    red: listKey[42].redStatus
-                  }" [disabled]="listKey[42].disabled" (click)="keyPress(listKey[42].key, true)">
-                  {{ listKey[42].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[43].greenStatus,
-                    red: listKey[43].redStatus
-                  }" [disabled]="listKey[43].disabled" (click)="keyPress(listKey[43].key, true)">
-                  {{ listKey[43].key }}
-                </button>
-                <button type="button" class="btn btn-secondary" [ngClass]="{
-                    green: listKey[44].greenStatus,
-                    red: listKey[44].redStatus
-                  }" [disabled]="listKey[44].disabled" (click)="keyPress(listKey[44].key, true)">
-                  {{ listKey[44].key }}
-                </button>
-              </div>
-              <button type="button" class="btn btn-secondary" style="width: 120px" [ngClass]="{
-                  green: listKey[0].greenStatus,
-                  red: listKey[0].redStatus
-                }" [disabled]="listKey[0].disabled" (click)="keyPress(listKey[0].key, true)">
-                {{ listKey[0].key }}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="row justify-content-center">
-          <div style="margin-top: 5px">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-              <button type="button" class="btn btn-secondary" style="width: 360px" [ngClass]="{
-                  green: listKey[49].greenStatus,
-                  red: listKey[49].redStatus
-                }" [disabled]="listKey[49].disabled" (click)="keyPress(listKey[49].key, true)">
-                {{ listKey[49].key }}
-              </button>
-              <button type="button" class="btn btn-light" style="margin-left: 5px" (click)="keyboardStatus(keyboardOff)"
-                (click)="btn1.focus()">
-                <img src="../../assets/images/{{ lockImage }}" />
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
-  </div>
-</form>
+      <div class="card" *ngIf="finExercice" style="margin-top:5px">
+        <label>
+          {{resumeExercice}}
+        </label>
+      </div>
+    </fieldset>
+  </form>
+</div>

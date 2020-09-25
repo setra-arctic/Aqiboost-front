@@ -45,4 +45,12 @@ export class ExempleMatriceService {
       })
     );
   }
+
+  listerExercicesEnfant(id) {
+    return this.http.get(`${environment.apiUrl}/listEnfantExercice/` + id).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
 }

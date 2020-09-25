@@ -54,7 +54,7 @@ const routes: Routes = [
     component: PopupDataExerciceComponent,
   },
   {
-    path: 'exemple_matrice',
+    path: 'exemple_matrice/:id',
     component: ExempleMatriceComponent,
   },
   {

@@ -1,3 +1,4 @@
+import { Uuid } from 'aws-sdk/clients/groundstation';
 import { ToastrService } from 'ngx-toastr';
 import { InscriptionParentsService } from './../inscription-parents/inscription-parents.service';
 import { EspaceEnfantService } from './espace-enfant.service';
@@ -18,6 +19,7 @@ export class EspaceEnfantsComponent implements OnInit {
   errorIdentifiant = '';
   enfantAbonne = false;
   pwdEnfant = '';
+  idEnfant: Uuid;
 
   constructor(
     private form_builder: FormBuilder,
@@ -78,6 +80,7 @@ export class EspaceEnfantsComponent implements OnInit {
                     positionClass: 'toast-top-center',
                   });
                 } else {
+                  this.idEnfant = res[0].id;
                   this.enfant
                     .verifyPWD(res[0].id, this.pwdEnfant)
                     .subscribe((res) => {
@@ -86,7 +89,9 @@ export class EspaceEnfantsComponent implements OnInit {
                           timeOut: 3000,
                           positionClass: 'toast-top-center',
                         });
-                        this.router.navigate(['exemple_matrice']);
+                        this.router.navigate([
+                          'exemple_matrice/' + this.idEnfant,
+                        ]);
                       } else {
                         this.Toast.error('Mot de passe invalide', '', {
                           timeOut: 3000,
